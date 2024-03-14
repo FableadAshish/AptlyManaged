@@ -1,118 +1,81 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import 'react-native-gesture-handler';
+import React, {useEffect} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {AuthStackNavigator} from './src/navigators/AuthStackNavigator';
+import {lightTheme} from './src/themes/light';
+import {AuthContext} from './src/contexts/AuthContext';
+import {StackNavigator} from './src/navigators/StackNavigator';
+import {useAuth} from './src/hooks/useAuth';
+import {UserContext} from './src/contexts/UserContext';
+import {SplashScreen as JsSplashScreen} from './src/screens/SplashScreen';
+import {darkTheme} from './src/themes/dark';
+import {ThemeContext} from './src/contexts/ThemeContext';
+import {StatusBar} from 'react-native';
+import Store from './src/hooks/Store';
+import SplashScreen from 'react-native-splash-screen';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const RootStack = createStackNavigator();
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+export default function App() {
+  const {auth, state} = useAuth();
+  // const isDarkMode = useDarkMode();
+  const [isDarkMode, setIsDarkMode] = React.useState(false);
+  const switchTheme = React.useCallback(() => {
+    setIsDarkMode(!isDarkMode);
+  }, [isDarkMode]);
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+  function renderScreens() {
+    if (state.loading) {
+      return (
+        <RootStack.Screen
+          options={{headerShown: false}}
+          name={'Splash'}
+          component={JsSplashScreen}
+        />
+      );
+    }
+    return state.user ? (
+      <RootStack.Screen name={'MainStack'} options={{title: ''}}>
+        {() => (
+          <UserContext.Provider value={state.user}>
+            <StackNavigator />
+          </UserContext.Provider>
+        )}
+      </RootStack.Screen>
+    ) : (
+      <RootStack.Screen
+        name={'AuthStack'}
+        component={AuthStackNavigator}
+        options={{headerShown: false}}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    );
+  }
+
+  return (
+    <Store>
+      <ThemeContext.Provider value={switchTheme}>
+        <StatusBar
+          backgroundColor="#EDB43C"
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        />
+        <AuthContext.Provider value={auth}>
+          <NavigationContainer theme={isDarkMode ? darkTheme : lightTheme}>
+            <RootStack.Navigator
+              screenOptions={{
+                headerShown: false,
+                animationEnabled: true,
+              }}>
+              {renderScreens()}
+            </RootStack.Navigator>
+          </NavigationContainer>
+        </AuthContext.Provider>
+      </ThemeContext.Provider>
+    </Store>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
-
-export default App;
