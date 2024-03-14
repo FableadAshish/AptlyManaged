@@ -13,7 +13,7 @@ import {
   Button,
 } from 'react-native';
 import {Picker} from '@react-native-community/picker';
-import styles from './Styles/ForgotPasswordStyles';
+import {styles} from './Styles/ForgotPasswordStyles';
 import {Heading} from '../../../components/Heading';
 import {Input} from '../../../components/Input';
 import {FilledButton} from '../../../components/FilledButton';

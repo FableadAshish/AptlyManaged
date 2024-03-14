@@ -17,6 +17,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+
 import SecureStorage from 'react-native-secure-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AddFeed from '../components/AddFeed';

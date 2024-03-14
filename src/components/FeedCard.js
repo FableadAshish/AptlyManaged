@@ -15,6 +15,7 @@ import {Colors} from '../themes/Colors';
 
 const FeedCard = props => {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
+
   const renderPhoto = ({index, item}) => {
     return index !== 0 ? (
       <Image style={styles.image} source={{uri: item}} />

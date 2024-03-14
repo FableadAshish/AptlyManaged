@@ -16,24 +16,24 @@ import {
   Button,
   FlatList,
 } from 'react-native';
-import {RadioButton, TextInput} from 'react-native-paper';
-import {Input} from '../../components/Input';
-import {FilledButton} from '../../components/FilledButton';
-import {Error} from '../../components/Error';
-import {Success} from '../../components/Success';
-import {AuthContainer} from '../../components/AuthContainer';
-import {Loading} from '../../components/Loading';
-import {BASE_URL} from '../../config';
-import {Formik} from 'formik';
+import { RadioButton, TextInput } from 'react-native-paper';
+import { Input } from '../../components/Input';
+import { FilledButton } from '../../components/FilledButton';
+import { Error } from '../../components/Error';
+import { Success } from '../../components/Success';
+import { AuthContainer } from '../../components/AuthContainer';
+import { Loading } from '../../components/Loading';
+import { BASE_URL } from '../../config';
+import { Formik } from 'formik';
 import * as yup from 'yup';
-import {Col, Row, Grid} from 'react-native-easy-grid';
+import { Col, Row, Grid } from 'react-native-easy-grid';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {UserContext} from '../../contexts/UserContext';
+import { UserContext } from '../../contexts/UserContext';
 import SecureStorage from 'react-native-secure-storage';
 import Textarea from 'react-native-textarea';
 // import * as ImagePicker from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
-export function AddPropertyScreenWithImage({navigation}) {
+export function AddPropertyScreenWithImage({ navigation }) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState('');
   const [success, setSuccess] = React.useState('');
@@ -48,7 +48,7 @@ export function AddPropertyScreenWithImage({navigation}) {
 
   const [status, setStatus] = React.useState();
   const [photos, setPhoto] = React.useState([]);
-  const {token} = React.useContext(UserContext);
+  const { token } = React.useContext(UserContext);
 
   const loginValidationSchema = yup.object().shape({
     title: yup.string().required('Title is Required'),
@@ -103,7 +103,7 @@ export function AddPropertyScreenWithImage({navigation}) {
 
   function addProperty(values) {
     setLoading(true);
-    SecureStorage.getItem('user').then(user => {
+    SecureStorage.getItem('user').then((user) => {
       if (user) {
         const userDetails = JSON.parse(user);
         axios
@@ -164,7 +164,7 @@ export function AddPropertyScreenWithImage({navigation}) {
         if (photos.length === 0) {
           setPhoto([response]);
         } else {
-          setPhoto(arr => [...arr, response]);
+          setPhoto((arr) => [...arr, response]);
         }
       }
       console.log(photos);
@@ -177,13 +177,13 @@ export function AddPropertyScreenWithImage({navigation}) {
     //   }
     // });
   };
-  const EstateImage = ({item, onPress, style}) => (
+  const EstateImage = ({ item, onPress, style }) => (
     <View style={styles.listItem}>
-      <Image source={{uri: item.uri}} style={styles.listingImage} />
+      <Image source={{ uri: item.uri }} style={styles.listingImage} />
     </View>
   );
 
-  const estateImage = ({item}) => {
+  const estateImage = ({ item }) => {
     return <EstateImage item={item} style={styles.flatListBox} />;
   };
 
@@ -211,7 +211,7 @@ export function AddPropertyScreenWithImage({navigation}) {
                 address: '',
                 propertyType: '',
               }}
-              onSubmit={values => {
+              onSubmit={(values) => {
                 console.log(values);
                 addProperty(values);
               }}>
@@ -228,7 +228,9 @@ export function AddPropertyScreenWithImage({navigation}) {
                   <View style={styles.drinkCard}>
                     <RadioButton
                       value="rent"
-                      status={propertyType === 'rent' ? 'checked' : 'unchecked'}
+                      status={
+                        propertyType === 'rent' ? 'checked' : 'unchecked'
+                      }
                       onPress={() => {
                         setPropertyType('rent');
                         values.propertyType = 'rent';
@@ -239,10 +241,12 @@ export function AddPropertyScreenWithImage({navigation}) {
                       onChangeText={handleChange('propertyType')}
                       onBlur={handleBlur('propertyType')}
                     />
-                    <Text style={{fontSize: 20, color: '#fff'}}>For Rent</Text>
+                    <Text style={{ fontSize: 20, color: '#fff' }}>For Rent</Text>
                     <RadioButton
                       value="sale"
-                      status={propertyType === 'sale' ? 'checked' : 'unchecked'}
+                      status={
+                        propertyType === 'sale' ? 'checked' : 'unchecked'
+                      }
                       onPress={() => {
                         setPropertyType('sale');
                         values.propertyType = 'sale';
@@ -253,7 +257,7 @@ export function AddPropertyScreenWithImage({navigation}) {
                       onChangeText={handleChange('propertyType')}
                       onBlur={handleBlur('propertyType')}
                     />
-                    <Text style={{fontSize: 20, color: '#fff'}}>For Sale</Text>
+                    <Text style={{ fontSize: 20, color: '#fff' }}>For Sale</Text>
                   </View>
                   <Text style={styles.lableInput}>Title</Text>
                   <View style={styles.SectionStyle}>
@@ -313,7 +317,7 @@ export function AddPropertyScreenWithImage({navigation}) {
                         renderItem={estateImage}
                         keyExtractor={(item, index) => 'index' + index}
                         initialNumToRender={10}
-                        style={{marginBottom: 20}}
+                        style={{ marginBottom: 20 }}
                       />
                     )}
                     <Button title="Select Image" onPress={handleChoosePhoto} />
@@ -344,20 +348,20 @@ export function AddPropertyScreenWithImage({navigation}) {
                       <View style={styles.SectionStyle}>
                         <DropDownPicker
                           items={[
-                            {label: '1', value: '1'},
-                            {label: '2', value: '2'},
-                            {label: '3', value: '3'},
-                            {label: '4', value: '4'},
-                            {label: '5', value: '5'},
-                            {label: '6', value: '6'},
-                            {label: '7', value: '7'},
-                            {label: '8', value: '8'},
-                            {label: '9', value: '9'},
-                            {label: '10', value: '10'},
+                            { label: '1', value: '1' },
+                            { label: '2', value: '2' },
+                            { label: '3', value: '3' },
+                            { label: '4', value: '4' },
+                            { label: '5', value: '5' },
+                            { label: '6', value: '6' },
+                            { label: '7', value: '7' },
+                            { label: '8', value: '8' },
+                            { label: '9', value: '9' },
+                            { label: '10', value: '10' },
                           ]}
                           defaultIndex={0}
-                          containerStyle={{height: 50}}
-                          onChangeItem={item => {
+                          containerStyle={{ height: 50 }}
+                          onChangeItem={(item) => {
                             setBeds(item.value);
                             values.beds = item.value;
                           }}
@@ -377,15 +381,15 @@ export function AddPropertyScreenWithImage({navigation}) {
                       <View style={styles.SectionStyle}>
                         <DropDownPicker
                           items={[
-                            {label: '1', value: '1'},
-                            {label: '2', value: '2'},
-                            {label: '3', value: '3'},
-                            {label: '4', value: '4'},
-                            {label: '5', value: '5'},
+                            { label: '1', value: '1' },
+                            { label: '2', value: '2' },
+                            { label: '3', value: '3' },
+                            { label: '4', value: '4' },
+                            { label: '5', value: '5' },
                           ]}
                           defaultIndex={0}
-                          containerStyle={{height: 50}}
-                          onChangeItem={item => {
+                          containerStyle={{ height: 50 }}
+                          onChangeItem={(item) => {
                             setBaths(item.value);
                             values.baths = item.value;
                           }}
@@ -408,16 +412,16 @@ export function AddPropertyScreenWithImage({navigation}) {
                   <View style={styles.SectionStyle}>
                     <DropDownPicker
                       items={[
-                        {label: '3 Months', value: '3 Months'},
-                        {label: '6 Months', value: '6 Months'},
-                        {label: '9 Months', value: '9 Months'},
-                        {label: '1 Years', value: '1 Years'},
-                        {label: '2 Years', value: '2 Years'},
-                        {label: '9 Years', value: '9 Years'},
+                        { label: '3 Months', value: '3 Months' },
+                        { label: '6 Months', value: '6 Months' },
+                        { label: '9 Months', value: '9 Months' },
+                        { label: '1 Years', value: '1 Years' },
+                        { label: '2 Years', value: '2 Years' },
+                        { label: '9 Years', value: '9 Years' },
                       ]}
                       defaultIndex={0}
-                      containerStyle={{height: 50}}
-                      onChangeItem={item => {
+                      containerStyle={{ height: 50 }}
+                      onChangeItem={(item) => {
                         setLease(item.value);
                         values.leaseLength = item.value;
                       }}
@@ -449,7 +453,7 @@ export function AddPropertyScreenWithImage({navigation}) {
                       onChangeText={handleChange('furnished')}
                       onBlur={handleBlur('furnished')}
                     />
-                    <Text style={{fontSize: 20, color: '#fff'}}>Yes</Text>
+                    <Text style={{ fontSize: 20, color: '#fff' }}>Yes</Text>
                     <RadioButton
                       value="No"
                       status={checked === 'No' ? 'checked' : 'unchecked'}
@@ -463,7 +467,7 @@ export function AddPropertyScreenWithImage({navigation}) {
                       onChangeText={handleChange('furnished')}
                       onBlur={handleBlur('furnished')}
                     />
-                    <Text style={{fontSize: 20, color: '#fff'}}>No</Text>
+                    <Text style={{ fontSize: 20, color: '#fff' }}>No</Text>
                   </View>
 
                   {/* <Text style={styles.lableInput}>Facilities</Text> */}
@@ -472,13 +476,13 @@ export function AddPropertyScreenWithImage({navigation}) {
                   <View style={styles.SectionStyle}>
                     <DropDownPicker
                       items={[
-                        {label: 'Immediately', value: 'Immediately'},
-                        {label: '3 Months', value: '3 Months'},
-                        {label: '1 Years', value: '1 Years'},
+                        { label: 'Immediately', value: 'Immediately' },
+                        { label: '3 Months', value: '3 Months' },
+                        { label: '1 Years', value: '1 Years' },
                       ]}
                       defaultIndex={0}
-                      containerStyle={{height: 50}}
-                      onChangeItem={item => {
+                      containerStyle={{ height: 50 }}
+                      onChangeItem={(item) => {
                         setAvailability(item.value);
                         values.availability = item.value;
                       }}
@@ -529,13 +533,13 @@ export function AddPropertyScreenWithImage({navigation}) {
                   <View style={styles.SectionStyle}>
                     <DropDownPicker
                       items={[
-                        {label: 'Email only', value: 'Email only'},
-                        {label: 'Phone', value: 'Phone'},
-                        {label: 'Both', value: 'Both'},
+                        { label: 'Email only', value: 'Email only' },
+                        { label: 'Phone', value: 'Phone' },
+                        { label: 'Both', value: 'Both' },
                       ]}
                       defaultIndex={0}
-                      containerStyle={{height: 50}}
-                      onChangeItem={item => {
+                      containerStyle={{ height: 50 }}
+                      onChangeItem={(item) => {
                         setEnquiry(item.value);
                         values.enquiry_by = item.value;
                       }}
@@ -555,14 +559,14 @@ export function AddPropertyScreenWithImage({navigation}) {
                   <View style={styles.SectionStyle}>
                     <DropDownPicker
                       items={[
-                        {label: 'Active', value: 'Active'},
-                        {label: 'Inactive', value: 'Inactive'},
-                        {label: 'Let Agreed', value: 'Let Agreed'},
-                        {label: 'Sale Agreed', value: 'Sale Agreed'},
+                        { label: 'Active', value: 'Active' },
+                        { label: 'Inactive', value: 'Inactive' },
+                        { label: 'Let Agreed', value: 'Let Agreed' },
+                        { label: 'Sale Agreed', value: 'Sale Agreed' },
                       ]}
                       defaultIndex={0}
-                      containerStyle={{height: 50}}
-                      onChangeItem={item => {
+                      containerStyle={{ height: 50 }}
+                      onChangeItem={(item) => {
                         setStatus(item.value);
                         values.status = item.value;
                       }}

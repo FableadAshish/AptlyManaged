@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, {useRef} from 'react';
 import axios from 'axios';
 import {
   SafeAreaView,
@@ -44,6 +44,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import { EmergencyAlarmModal } from '../components/EmergencyAlarmModal';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Colors } from '../themes/Colors';
 export const defaultMaleImage = 'public/front/images/nomale.png';
 export const defaultFeMaleImage = 'public/front/images/nofemale.jpg';
 export function ChatScreen({ navigation, route }) {
@@ -75,14 +76,12 @@ export function ChatScreen({ navigation, route }) {
     message: yup.string().required('Message is Required'),
   });
   const scrollViewRef = useRef();
-  console.log("route.params;", route.params)
+  console.log('route.params;', route.params);
   const onRefresh = React.useCallback(() => {
-
     setRefreshing(true);
     getServices();
   }, []);
   React.useEffect(function () {
-
     getServices();
   }, []);
 
@@ -93,20 +92,15 @@ export function ChatScreen({ navigation, route }) {
       sender_id: appUser.id,
       receiver_id: selectedFeed.id,
       message: issue.message,
-      creationTime: new Date().getTime() / 1000
-
-    }
-    console.log("chat submit", data)
+      creationTime: new Date().getTime() / 1000,
+    };
+    console.log('chat submit', data);
     axios
-      .post(
-        `${BASE_URL}/send-message`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      .post(`${BASE_URL}/send-message`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      )
+      })
       .then(function (response) {
         setLoading(false);
         console.log(response);
@@ -124,7 +118,7 @@ export function ChatScreen({ navigation, route }) {
   function getServices() {
     setRefreshing(false);
     setLoading(true);
-    SecureStorage.getItem('user').then((user) => {
+    SecureStorage.getItem('user').then(user => {
       if (user) {
         const userDetails = JSON.parse(user);
         setAppUser(userDetails.details);
@@ -157,7 +151,7 @@ export function ChatScreen({ navigation, route }) {
 
   function getMoreData() {
     setLoadMore(true);
-    SecureStorage.getItem('user').then((user) => {
+    SecureStorage.getItem('user').then(user => {
       if (user) {
         const userDetails = JSON.parse(user);
         setAppUser(userDetails.details);
@@ -177,7 +171,7 @@ export function ChatScreen({ navigation, route }) {
             },
           )
           .then(async function (response) {
-            console.log("response", response)
+            console.log('response', response);
             setLoading(false);
             setLoadMore(false);
             setData([...data, ...response.data.data.data]);
@@ -202,62 +196,72 @@ export function ChatScreen({ navigation, route }) {
     });
   }
 
-  const Indepth = ({ item, onPress, style }) => {
+  const Indepth = ({item, onPress, style}) => {
+    return (
+      <View>
+        <View style={styles.inMsgWrap}>
+          <Image style={styles.profileImg} source={{uri: item.image}} />
+          <Text style={styles.inMsgContent}>{item.message}</Text>
+        </View>
+        <Text style={styles.inmsgTime}>
+          {item.creationTime &&
+            Moment.unix(parseInt(item.creationTime)).fromNow()}
+        </Text>
+      </View>
+    );
+  };
 
+  const Indepths = ({item, onPress, style}) => {
     return (
       <View>
         <View style={styles.inMsgWrap}>
           <Image
+            source={{
+              uri:
+                item.gender == 'male'
+                  ? CONFIG_URL + defaultMaleImage
+                  : CONFIG_URL + defaultFeMaleImage,
+            }}
             style={styles.profileImg}
-            source={{ uri: item.image }}
           />
           <Text style={styles.inMsgContent}>{item.message}</Text>
         </View>
-        <Text style={styles.inmsgTime}>{item.creationTime && Moment.unix(parseInt(item.creationTime)).fromNow()}</Text>
+        <Text style={styles.inmsgTime}>
+          {item.creationTime &&
+            Moment.unix(parseInt(item.creationTime)).fromNow()}
+        </Text>
       </View>
-    )
+    );
   };
 
-  const Indepths = ({ item, onPress, style }) => {
-
-    return (
-      <View>
-        <View style={styles.inMsgWrap}>
-          <Image source={{ uri: item.gender == 'male' ? CONFIG_URL + defaultMaleImage : CONFIG_URL + defaultFeMaleImage }} style={styles.profileImg} />
-          <Text style={styles.inMsgContent}>{item.message}</Text>
-        </View>
-        <Text style={styles.inmsgTime}>{item.creationTime && Moment.unix(parseInt(item.creationTime)).fromNow()}</Text>
-      </View>
-    )
-  };
-
-  const Service = ({ item, onPress, style }) => {
+  const Service = ({item, onPress, style}) => {
     return (
       <View>
         <View style={styles.outMsgWrap}>
           <Text style={styles.outMsgContent}>{item.message}</Text>
           <Icon name="checkmark-done-outline" style={styles.readIcon} />
         </View>
-        <Text style={styles.outmsgTime}>{item.creationTime && Moment.unix(parseInt(item.creationTime)).fromNow()}</Text>
+        <Text style={styles.outmsgTime}>
+          {item.creationTime &&
+            Moment.unix(parseInt(item.creationTime)).fromNow()}
+        </Text>
       </View>
-    )
+    );
   };
 
-  const services = ({ item }) => {
+  const services = ({item}) => {
     if (item.sender_id == appUser.id) {
       return <Service item={item} style={styles.flatListBox} />;
-    }
-    else {
+    } else {
       if (item.image != '') {
         return <Indepth item={item} style={styles.flatListBox} />;
-      }
-      else {
+      } else {
         return <Indepths item={item} style={styles.flatListBox} />;
       }
     }
   };
 
-  const deleteFeedAlert = (feed_id) =>
+  const deleteFeedAlert = feed_id =>
     Alert.alert(
       'Delete Note',
       'Are you sure you want to delete selected Note ?',
@@ -267,12 +271,12 @@ export function ChatScreen({ navigation, route }) {
           onPress: () => console.log('Cancel Pressed'),
           style: 'cancel',
         },
-        { text: 'Delete', onPress: () => deleteFeed(feed_id) },
+        {text: 'Delete', onPress: () => deleteFeed(feed_id)},
       ],
-      { cancelable: false },
+      {cancelable: false},
     );
 
-  const deleteFeed = (feed_id) => {
+  const deleteFeed = feed_id => {
     axios
       .post(
         `${BASE_URL}/delete-notes`,
@@ -286,47 +290,69 @@ export function ChatScreen({ navigation, route }) {
           },
         },
       )
-      .then((response) => {
+      .then(response => {
         setLoading(false);
         console.log(response);
         getServices();
         setVisible(false);
       })
-      .catch((e) => {
+      .catch(e => {
         setLoading(false);
         setError(e.response.data.msg);
         console.log(e.response.data);
       });
   };
 
-  const onDelete = (id) => {
-    console.log('onload', id)
+  const onDelete = id => {
+    console.log('onload', id);
     //deleteFeedAlert(id);
   };
 
   return (
     <AuthContainer>
-      <View style={{ flex: 1 }}>
-
-
+      <View style={{flex: 1}}>
         {/* <ScrollView style={styles.chatContainer} ref={scrollViewRef}
             onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}>
              */}
+        <Icon
+          name="arrow-back"
+          size={30}
+          style={{
+            // position: 'absolute',
+            // top: 35,
+            color: 'black',
+            // zIndex: 1000,
+            // left: 20,
+            paddingTop: 50,
+            backgroundColor: Colors.primarColor,
+            paddingLeft: 20,
+          }}
+          onPress={() => navigation.goBack()}
+        />
         <View>
           <ImageBackground
             source={require('../../Image/chat.png')}
-            style={styles.headerBG} >
-            <Heading style={styles.titleText}>{selectedFeed.first_name} {selectedFeed.last_name} <Icon name="ellipse" style={selectedFeed.livestatus == 'active' ? styles.online : styles.offline} /></Heading>
+            style={styles.headerBG}>
+            <Heading style={styles.titleText}>
+              {selectedFeed.first_name} {selectedFeed.last_name}{' '}
+              <Icon
+                name="ellipse"
+                style={
+                  selectedFeed.livestatus == 'active'
+                    ? styles.online
+                    : styles.offline
+                }
+              />
+            </Heading>
           </ImageBackground>
         </View>
         {data && (
           <FlatList
             ref={scrollViewRef}
-
             data={data}
             inverted
             renderItem={services}
-            keyExtractor={(item) => 'ses' + item.id}
+            keyExtractor={item => 'ses' + item.id}
             initialNumToRender={10}
             onEndReachedThreshold={0.1}
             onEndReached={() => {
@@ -344,18 +370,20 @@ export function ChatScreen({ navigation, route }) {
         <EmergencyAlarmModal setLoading={setLoading} />
         <Loading loading={loading} />
 
-        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : ''} keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}>
-
-          <View style={{
-            //  paddingBottom: 40,
-            backgroundColor: '#fff'
-          }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : ''}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}>
+          <View
+            style={{
+              //  paddingBottom: 40,
+              backgroundColor: '#fff',
+            }}>
             <Formik
               validationSchema={validationSchema}
               initialValues={{
                 message: '',
               }}
-              onSubmit={(values, { setSubmitting, resetForm }) => {
+              onSubmit={(values, {setSubmitting, resetForm}) => {
                 sendIssue(values);
                 resetForm();
                 setSubmitting(false);
@@ -370,30 +398,33 @@ export function ChatScreen({ navigation, route }) {
               }) => (
                 <>
                   <View style={styles.msgTypeWrap}>
-                    <TextInput style={styles.input}
+                    <TextInput
+                      style={styles.input}
                       onFocus={() => {
-                        console.log("scrollRef", scrollViewRef)
+                        console.log('scrollRef', scrollViewRef);
                       }}
                       name="message"
                       placeholder="Type Message here..."
-                      underlineColorAndroid='rgba(0,0,0,0)'
+                      underlineColorAndroid="rgba(0,0,0,0)"
                       onChangeText={handleChange('message')}
                       onBlur={handleBlur('message')}
                       value={values.message}
                       keyboardType="default"
                       autoCapitalize="none"
                     />
-                    <Text style={styles.sendMsg}><Icon name="send" style={styles.sendIcon} onPress={handleSubmit} /></Text>
+                    <Text style={styles.sendMsg}>
+                      <Icon
+                        name="send"
+                        style={styles.sendIcon}
+                        onPress={handleSubmit}
+                      />
+                    </Text>
                   </View>
-
                 </>
               )}
             </Formik>
-
           </View>
         </KeyboardAvoidingView>
-
-
       </View>
     </AuthContainer>
   );
@@ -525,9 +556,3 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
 });
-
-
-
-
-
-

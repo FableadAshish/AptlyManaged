@@ -27,7 +27,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Moment from 'moment';
 import {EmergencyAlarmModal} from '../components/EmergencyAlarmModal';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
-import { Colors } from '../themes/Colors';
+import {Colors} from '../themes/Colors';
 
 export function AboutApartmentScreen({navigation}) {
   const {logout} = React.useContext(AuthContext);
@@ -116,21 +116,21 @@ export function AboutApartmentScreen({navigation}) {
     <AuthContainer>
       <ScrollView>
         <SafeAreaView style={styles.mainView}>
-        <Icon
-          name="arrow-back"
-          size={30}
-          style={{
-            // position: 'absolute',
-            // top: 35,
-            color: 'black',
-            // zIndex: 1000,
-            // left: 20,
-            paddingTop: 50,
-            backgroundColor: Colors.primarColor,
-            paddingLeft: 20,
-          }}
-          onPress={()=>navigation.goBack()}
-        />
+          <Icon
+            name="arrow-back"
+            size={30}
+            style={{
+              // position: 'absolute',
+              // top: 35,
+              color: 'black',
+              // zIndex: 1000,
+              // left: 20,
+              paddingTop: 50,
+              backgroundColor: Colors.primarColor,
+              paddingLeft: 20,
+            }}
+            onPress={() => navigation.goBack()}
+          />
           <View style={styles.headerBG}>
             <Heading style={styles.titleText}>About {'\n'} Apartment</Heading>
             <Image

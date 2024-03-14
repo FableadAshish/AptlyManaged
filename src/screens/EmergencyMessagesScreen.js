@@ -7,17 +7,10 @@ import {
   StyleSheet,
   Text,
   RefreshControl,
-  StatusBar,
-  TouchableOpacity,
-  ScrollView,
-  Linking,
   Image,
-  Platform,
   ActivityIndicator,
 } from 'react-native';
-import {HeaderIconButton} from '../components/HeaderIconButton';
 import {AuthContext} from '../contexts/AuthContext';
-import {HeaderIconsContainer} from '../components/HeaderIconsContainer';
 import {ThemeContext} from '../contexts/ThemeContext';
 import {AuthContainer} from '../components/AuthContainer';
 import {Heading} from '../components/Heading';
@@ -28,12 +21,10 @@ import {Loading} from '../components/Loading';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Moment from 'moment';
 import {EmergencyAlarmModal} from '../components/EmergencyAlarmModal';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import {Colors} from '../themes/Colors';
 
 export function EmergencyMessagesScreen({navigation}) {
   const {logout} = React.useContext(AuthContext);
-  const switchTheme = React.useContext(ThemeContext);
   const {token} = React.useContext(UserContext);
   const [data, setData] = React.useState([]);
   const [appUser, setAppUser] = React.useState();
@@ -144,16 +135,8 @@ export function EmergencyMessagesScreen({navigation}) {
     );
   };
 
-  const config = {
-    velocityThreshold: 0.3,
-    directionalOffsetThreshold: 40,
-    gestureIsClickThreshold: 5,
-  };
-  function onSwipeLeft(direction) {
-    navigation.navigate('Advertise');
-  }
 
-  const EmergencyMessages = ({item, onPress, style}) => (
+  const EmergencyMessages = ({item, style}) => (
     <View style={[styles.item, style]}>
       <View style={styles.leftView}>
         <Text style={styles.name}>{item.description}</Text>
@@ -183,7 +166,7 @@ export function EmergencyMessagesScreen({navigation}) {
             backgroundColor: Colors.primarColor,
             paddingLeft: 25,
           }}
-          onPress={()=>navigation.goBack()}
+          onPress={() => navigation.goBack()}
         />
         <View style={styles.headerBG}>
           <Heading style={styles.titleText}>
@@ -260,7 +243,7 @@ const styles = StyleSheet.create({
   },
   listWrap: {
     // marginTop: 20,
-    paddingBottom: 120,
+    marginBottom: 200,
   },
   flatListBox: {
     marginBottom: 20,

@@ -16,6 +16,7 @@ import {AuthContext} from '../contexts/AuthContext';
 import {ThemeContext} from '../contexts/ThemeContext';
 import {AuthContainer} from '../components/AuthContainer';
 import {Heading} from '../components/Heading';
+
 import SecureStorage from 'react-native-secure-storage';
 import {UserContext} from '../contexts/UserContext';
 import {Input} from '../components/Input';
@@ -288,7 +289,7 @@ export function NoteScreen({navigation}) {
             backgroundColor: Colors.primarColor,
             paddingLeft: 20,
           }}
-          onPress={()=>navigation.goBack()}
+          onPress={() => navigation.goBack()}
         />
         <View style={styles.headerBG}>
           <Heading style={styles.titleText}>Home Notes</Heading>

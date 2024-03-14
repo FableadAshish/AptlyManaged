@@ -253,11 +253,11 @@ export function NotificationScreen({navigation}) {
           <ImageBackground
             source={require('../../Image/notification.png')}
             style={styles.headerBG}>
-              <Icon
-                    name="arrow-back"
-                    style={styles.backicon}
-                    onPress={() => navigation.goBack()}
-                  />
+            <Icon
+              name="arrow-back"
+              style={styles.backicon}
+              onPress={() => navigation.goBack()}
+            />
             <Heading style={styles.titleText}>Notifications</Heading>
           </ImageBackground>
           <View style={styles.container}>
@@ -266,7 +266,7 @@ export function NotificationScreen({navigation}) {
                   <>
                     <Text style={styles.dateText}>{data[key].formatdate}</Text>
 
-                    <View style={styles.listingWrap}>
+                    <View style={styles.listWrap}>
                       <FlatList
                         data={data[key].items || []}
                         renderItem={services}

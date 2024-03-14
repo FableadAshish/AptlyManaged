@@ -1,44 +1,41 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import axios from 'axios';
 import {
   Image,
   View,
   FlatList,
-  TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
   ActivityIndicator,
   // Picker,
   Text,
-  Alert,
   StyleSheet,
   ScrollView,
+  Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { fontSize, isIos, spacing } from '../../constants/appStyles';
-import Picker from '../../components/popupView/picker';
-import { AuthContainer } from '../../components/AuthContainer';
-import { FilledButton } from '../../components/FilledButton';
-import { BASE_URL } from '../../config';
+import {fontSize, spacing} from '../../constants/appStyles';
+import {AuthContainer} from '../../components/AuthContainer';
+import {FilledButton} from '../../components/FilledButton';
+import {BASE_URL} from '../../config';
 import SecureStorage from 'react-native-secure-storage';
-import { Loading } from '../../components/Loading';
-import { UserContext } from '../../contexts/UserContext';
-import { useNavigation } from '@react-navigation/native';
-import PopView from '../../components/popupView';
-import { validURL } from '../../components/AddFeed';
+import {UserContext} from '../../contexts/UserContext';
+import {validURL} from '../../components/AddFeed';
+import {useNavigation} from '@react-navigation/native';
 // import * as ImagePicker from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
-export const Label = (props) => (
+import {Colors} from '../../themes/Colors';
+export const Label = props => (
   <Text style={styles.labelText}>{props.value}</Text>
 );
-export const InputBox = (props) => (
+export const InputBox = props => (
   <TextInput
     style={{
       // ...styles.input(props.multiline),
       ...(props.style ? props.style : {}),
     }}
     // placeholderTextColor="grey"
-   
+
     {...props}
   />
 );
@@ -46,15 +43,15 @@ export const InputBox = (props) => (
 class UpdateDetailScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = { photos: '' };
+    this.state = {photos: ''};
   }
   state = {
     user: '',
     appUser: {},
-    issubmiting: false
+    issubmiting: false,
   };
-  updateUser = (user) => {
-    this.setState({ user: user });
+  updateUser = user => {
+    this.setState({user: user});
   };
 
   static contextType = UserContext;
@@ -73,9 +70,9 @@ class UpdateDetailScreen extends Component {
   }
 
   validate = () => {
-    const { next, saveState } = this.props;
-    const { state } = this;
-    const { first_name, last_name, email, phone_number } = state;
+    const {next, saveState} = this.props;
+    const {state} = this;
+    const {first_name, last_name, email, phone_number} = state;
     let errors = {};
     if (!first_name) {
       errors.first_name = 'Please enter First Name';
@@ -89,9 +86,9 @@ class UpdateDetailScreen extends Component {
     // if (!photos || !photos.length) {
     //   errors.photos = 'Please select atleast one photo';
     // }
-console.log("errors",errors)
+    console.log('errors', errors);
     if (Object.keys(errors).length) {
-      this.setState({ errors });
+      this.setState({errors});
       return;
     }
     //saveState(this.state);
@@ -100,17 +97,17 @@ console.log("errors",errors)
   };
 
   submit = () => {
-    this.setState({ issubmiting: true }, () => {
+    this.setState({issubmiting: true}, () => {
       const state = this.props.getState() || {};
-      const { token } = this.context;
-console.log("start")
+      const {token} = this.context;
+      console.log('start');
       // return;
-      this.setState({ loading: true });
-      SecureStorage.getItem('user').then((user) => {
+      this.setState({loading: true});
+      SecureStorage.getItem('user').then(user => {
         if (user) {
           const userDetails = JSON.parse(user);
           const isEdit = this.state.isEdit;
-          this.setState({ appUser: userDetails });
+          this.setState({appUser: userDetails});
 
           const formData = new FormData();
 
@@ -125,20 +122,20 @@ console.log("start")
 
           console.log('this', this.state.photos);
           if (this.state.photos === undefined) {
-
-          }
-          else {
+          } else {
             if (this.state.photos.length) {
-              console.log("photoes",this.state.photos)
-              
-              this.state.photos.map((img) => {
+              console.log('photoes', this.state.photos);
+
+              this.state.photos.map(img => {
                 const image = {
                   name: img.modificationDate,
                   path: img.path,
                   uri: img.path,
                   type: img.mime,
                 };
-                if (!image.path) return;
+                if (!image.path) {
+                  return;
+                }
                 formData.append('images', image);
               });
             }
@@ -165,62 +162,65 @@ console.log("start")
             .catch(this.onFail);
         }
       });
-    })
+    });
   };
 
-
-  onSuccess = (response) => {
-    this.setState({ loading: false, issubmiting: false });
+  onSuccess = response => {
+    this.setState({loading: false, issubmiting: false});
     const propsState = this.props.getState() || {};
-    const { backScreen } = propsState;
+    const {backScreen} = propsState;
 
-    alert(this.state.isEdit ? 'User Details Update Successfully' : 'User Details Update Successfully');
-    this.setState({ photos: [] });
+    alert(
+      this.state.isEdit
+        ? 'User Details Update Successfully'
+        : 'User Details Update Successfully',
+    );
+    this.setState({photos: []});
 
     const state = this.props.getState() || {};
     setTimeout(() => {
-      this.props.navigation.navigate('Profile', { refetch: Math.random() });
+      this.props.navigation.navigate('Profile', {refetch: Math.random()});
       // this.props.navigation.goBack()
     }, 1000);
 
-    console.log('UpdateScreen onSuccess', { response, state: this.state })
+    console.log('UpdateScreen onSuccess', {response, state: this.state});
   };
 
-  onFail = (error) => {
-    this.setState({ loading: false, issubmiting: false });
+  onFail = error => {
+    this.setState({loading: false, issubmiting: false});
     console.log(error.response);
     alert(`Failed: ${error.data ? error.data.message : 'Add Failed'}`);
   };
 
-  setChecked = (value) => {
-    this.setState({ checked: value });
+  setChecked = value => {
+    this.setState({checked: value});
   };
 
   handleChange = (text, name) => {
-    const errors = { ...this.state.errors };
+    const errors = {...this.state.errors};
     errors[name] = undefined;
-    this.setState({ [name]: text, errors });
+    this.setState({[name]: text, errors});
   };
 
   handleChoosePhoto = () => {
-
-
     ImagePicker.openPicker({
       // width: 400,
       // height: 400,
       // cropping: true,
-    }).then(response => {
-      const { photos = [] } = this.state;
-      // if (response.uri) {
-      if (photos.length === 0) {
-        this.setState({ photos: [response] });
-      } else {
-        this.setState({ photos: [...photos, response] });
-      }
-      // }
-    }).then((error)=>{
-      console.log("image error",error)
-    });
+    })
+      .then(response => {
+        const {photos = []} = this.state;
+        // if (response.uri) {
+        if (photos.length === 0) {
+          this.setState({photos: [response]});
+        } else {
+          this.setState({photos: [...photos, response]});
+        }
+        // }
+      })
+      .then(error => {
+        console.log('image error', error);
+      });
 
     // ImagePicker.launchImageLibrary({}, (response) => {
 
@@ -228,29 +228,25 @@ console.log("start")
   };
 
   handleChooseCamera = () => {
-
-
-    ImagePicker.openCamera({
-
-    }).then(response => {
-      const { photos = [] } = this.state;
+    ImagePicker.openCamera({}).then(response => {
+      const {photos = []} = this.state;
       // if (response.path) {
-       
-        if (photos.length === 0) {
-          this.setState({ photos: [response] });
-        } else {
-          this.setState({ photos: [...photos, response] });
-        }
+
+      if (photos.length === 0) {
+        this.setState({photos: [response]});
+      } else {
+        this.setState({photos: [...photos, response]});
+      }
       // }
     });
   };
 
-  estateImage = ({ item }) => {
+  estateImage = ({item}) => {
     return <EstateImage item={item} style={styles.flatListBox} />;
   };
 
-  chooseImage = (type) => {
-    this.setState({ showImagePopup: false });
+  chooseImage = type => {
+    this.setState({showImagePopup: false});
     if (type === 'gallery') {
       this.handleChoosePhoto();
     } else {
@@ -258,23 +254,24 @@ console.log("start")
     }
   };
 
-
-  renderPhoto = ({ item }) => {
-    
+  renderPhoto = ({item}) => {
     var source = typeof item === 'object' ? item.path : item;
-    console.log("image item",item,source)
+    console.log('image item', item, source);
     return (
       <View style={styles.imageContainer}>
-        <Image style={[styles.image,{width:50,height:50}]} source={{ uri: source }} />
+        <Image
+          style={[styles.image, {width: 50, height: 50}]}
+          source={{uri: source}}
+        />
         <View style={styles.deleteButton}>
           <Icon
             name="close-circle-sharp"
             onPress={() => {
-              const { photos = [] } = this.state;
-              var newPhotos = photos.filter((photo) => {
+              const {photos = []} = this.state;
+              var newPhotos = photos.filter(photo => {
                 return photo !== item;
               });
-              this.setState({ photos: newPhotos });
+              this.setState({photos: newPhotos});
               if (validURL(item)) {
                 this.setState({
                   deleted_images: [...this.state.deleted_images, item],
@@ -288,62 +285,78 @@ console.log("start")
     );
   };
 
-
   render() {
-    const { errors = {}, photos = [] } = this.state;
+    const {errors = {}, photos = []} = this.state;
 
     return (
       <AuthContainer>
         <KeyboardAvoidingView
-          behavior={Platform.OS == 'ios' ? 'padding' : 'height'} >
-          <ScrollView keyboardShouldPersistTaps="handled" style={styles.mainView}>
+          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            style={styles.mainView}>
+            <Icon
+              name="arrow-back"
+              size={30}
+              style={{
+                // position: 'absolute',
+                // top: 35,
+                color: 'black',
+                // zIndex: 1000,
+                // left: 20,
+                paddingTop: 60,
+                backgroundColor: Colors.primarColor,
+                paddingLeft: 20,
+              }}
+              onPress={() => this.props.navigation.goBack()}
+            />
             <View style={styles.container}>
               <Text style={styles.lableInput}>First Name</Text>
               <View style={styles.SectionStyle}>
                 <InputBox
-                  onChangeText={(text) => this.handleChange(text, 'first_name')}
-                  value={this.state.first_name}
+                  onChangeText={text => this.handleChange(text, 'first_name')}
+                  // value={this.state.first_name}
                   placeholder={'First Name'}
                   style={styles.textInput}
                 />
-                <Text style={{ color: 'red' }}>{errors.first_name}</Text>
+                <Text style={{color: 'red'}}>{errors.first_name}</Text>
               </View>
 
               <Text style={styles.lableInput}>Middle Name</Text>
               <View style={styles.SectionStyle}>
                 <InputBox
-                  onChangeText={(text) => this.handleChange(text, 'middle_name')}
+                  onChangeText={text => this.handleChange(text, 'middle_name')}
                   value={this.state.middle_name}
                   placeholder={'Middle Name'}
                   style={styles.textInput}
                 />
-                <Text style={{ color: 'red' }}>{errors.middle_name}</Text>
+                <Text style={{color: 'red'}}>{errors.middle_name}</Text>
               </View>
 
               <Text style={styles.lableInput}>Last Name</Text>
               <View style={styles.SectionStyle}>
                 <InputBox
-                  onChangeText={(text) => this.handleChange(text, 'last_name')}
+                  onChangeText={text => this.handleChange(text, 'last_name')}
                   value={this.state.last_name}
                   placeholder={'Last Name'}
                   style={styles.textInput}
                 />
-                <Text style={{ color: 'red' }}>{errors.last_name}</Text>
+                <Text style={{color: 'red'}}>{errors.last_name}</Text>
               </View>
 
               <Text style={styles.lableInput}>Email Address</Text>
               <View style={styles.SectionStyle}>
                 <InputBox
-                 editable={false}
-                  onChangeText={(text) => this.handleChange(text, 'email')}
-                  value={this.state.email}
+                  // editable={true}
+                  onChangeText={text => this.handleChange(text, 'email')}
+                  // value={this.state.email}
                   placeholder={'Email Address'}
                   style={styles.textInput}
                 />
-                <Text style={{ color: 'red' }}>{errors.email}</Text>
+                <Text style={{color: 'red'}}>{errors.email}</Text>
               </View>
 
-            {/*  <Text style={styles.lableInput}>Phone Number</Text>
+              {/*  <Text style={styles.lableInput}>Phone Number</Text>
                <View style={styles.SectionStyle}>
                 <InputBox
                  editable={false}
@@ -382,17 +395,24 @@ console.log("start")
                     onPress={this.handleChoosePhoto}
                   />
                 </View>
-                {errors.photos ? <Text style={{ color: 'red', marginBottom: spacing(20) }}>{errors.photos}</Text> : null}
+                {errors.photos ? (
+                  <Text style={{color: 'red', marginBottom: spacing(20)}}>
+                    {errors.photos}
+                  </Text>
+                ) : null}
               </View>
-              {
-                this.state.issubmiting &&
+              {this.state.issubmiting && (
                 <View>
                   <ActivityIndicator size="large" color="#000" />
                 </View>
-              }
+              )}
 
               {/* <Button onPress={this.nextStep} style={styles.loginButton}/> */}
-              <FilledButton title={'Update'} onPress={this.validate} style={styles.loginButton} />
+              <FilledButton
+                title={'Update'}
+                onPress={this.validate}
+                style={styles.loginButton}
+              />
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
@@ -405,7 +425,6 @@ console.log("start")
 
 export default function (props) {
   const navigation = useNavigation();
-
   return <UpdateDetailScreen {...props} navigation={navigation} />;
 }
 
@@ -415,7 +434,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#EDB43C',
   },
   container: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
+    marginTop: 25,
   },
   SectionStyle: {
     height: 40,
@@ -570,6 +590,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: spacing(20),
+    marginTop: 20,
   },
   sendIcon: {
     fontSize: fontSize(22),

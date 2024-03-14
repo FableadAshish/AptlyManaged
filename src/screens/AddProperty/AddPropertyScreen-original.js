@@ -17,18 +17,18 @@ import {
   FlatList,
 } from 'react-native';
 import {RadioButton, TextInput} from 'react-native-paper';
-import {Input} from '../../components/Input';
-import {FilledButton} from '../../components/FilledButton';
-import {Error} from '../../components/Error';
-import {Success} from '../../components/Success';
-import {AuthContainer} from '../../components/AuthContainer';
-import {Loading} from '../../components/Loading';
-import {BASE_URL} from '../../config';
+import {Input} from '../components/Input';
+import {FilledButton} from '../components/FilledButton';
+import {Error} from '../components/Error';
+import {Success} from '../components/Success';
+import {AuthContainer} from '../components/AuthContainer';
+import {Loading} from '../components/Loading';
+import {BASE_URL} from '../config';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {UserContext} from '../../contexts/UserContext';
+import {UserContext} from '../contexts/UserContext';
 import SecureStorage from 'react-native-secure-storage';
 import Textarea from 'react-native-textarea';
 // import * as ImagePicker from 'react-native-image-picker';
@@ -68,13 +68,11 @@ export function AddPropertyScreen({navigation}) {
       .string()
       .required('Baths is Required')
       .matches(/^[0-9]+$/, 'Must be only digits')
-      .test(
-        'BathsMax',
-        'Baths Must be a less than or equal to 5',
-        function (value) {
-          return value <= 5;
-        },
-      )
+      .test('BathsMax', 'Baths Must be a less than or equal to 5', function (
+        value,
+      ) {
+        return value <= 5;
+      })
       .test('BathsMin', 'Baths Must be a greater than 0', function (value) {
         return value > 0;
       }),
@@ -96,7 +94,7 @@ export function AddPropertyScreen({navigation}) {
 
   function addProperty(values) {
     setLoading(true);
-    SecureStorage.getItem('user').then(user => {
+    SecureStorage.getItem('user').then((user) => {
       if (user) {
         const userDetails = JSON.parse(user);
         axios
@@ -167,7 +165,7 @@ export function AddPropertyScreen({navigation}) {
                 description: '',
                 address: '',
               }}
-              onSubmit={values => {
+              onSubmit={(values) => {
                 console.log(values);
                 addProperty(values);
               }}>
@@ -294,7 +292,7 @@ export function AddPropertyScreen({navigation}) {
                       ]}
                       defaultIndex={0}
                       containerStyle={{height: 50}}
-                      onChangeItem={item => {
+                      onChangeItem={(item) => {
                         setLease(item.value);
                         values.lease_length = item.value;
                       }}
@@ -321,7 +319,7 @@ export function AddPropertyScreen({navigation}) {
                       ]}
                       defaultIndex={0}
                       containerStyle={{height: 50}}
-                      onChangeItem={item => {
+                      onChangeItem={(item) => {
                         setAvailability(item.value);
                         values.availability = item.value;
                       }}
@@ -377,7 +375,7 @@ export function AddPropertyScreen({navigation}) {
                       ]}
                       defaultIndex={0}
                       containerStyle={{height: 50}}
-                      onChangeItem={item => {
+                      onChangeItem={(item) => {
                         setEnquiry(item.value);
                         values.enquiry_by = item.value;
                       }}
@@ -404,7 +402,7 @@ export function AddPropertyScreen({navigation}) {
                       ]}
                       defaultIndex={0}
                       containerStyle={{height: 50}}
-                      onChangeItem={item => {
+                      onChangeItem={(item) => {
                         setStatus(item.value);
                         values.status = item.value;
                       }}
