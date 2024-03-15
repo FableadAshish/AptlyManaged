@@ -7,7 +7,7 @@ import {FacilityScreen} from '../screens/FacilityScreen';
 import {PollsScreen} from '../screens/PollsScreen';
 import {IssueScreen} from '../screens/IssueScreen';
 import { FeedsScreen } from '../screens/FeedsScreen';
-import {NotificationScreen} from '../screens/NotificationScreen';
+import {NotificationScreen} from '../screens/Dashboard/Notifications/NotificationScreen';
 import {AdvertiseScreen} from '../screens/AdvertiseScreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';

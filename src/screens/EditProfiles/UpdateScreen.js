@@ -22,7 +22,6 @@ import SecureStorage from 'react-native-secure-storage';
 import {UserContext} from '../../contexts/UserContext';
 import {validURL} from '../../components/AddFeed';
 import {useNavigation} from '@react-navigation/native';
-// import * as ImagePicker from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import {Colors} from '../../themes/Colors';
 export const Label = props => (

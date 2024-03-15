@@ -12,10 +12,14 @@ const MetroWarning = require('../../Image/metro-warning.png');
 const ArrowRight = require('../../Image/arrow-rightnavigate.png');
 const discoverImage = require('../../Image/discover-img.jpg');
 const socialMedia = require('../../Image/social-media.png');
-// const discoverImage = require('../../Image/discover-img.jpg');
-// const discoverImage = require('../../Image/discover-img.jpg');
-// const discoverImage = require('../../Image/discover-img.jpg');
-// const discoverImage = require('../../Image/discover-img.jpg');
+const Notifications = require('../../Image/notification.png');
+const Apartment = require('../../Image/apartment.png');
+const Parking = require('../../Image/parking.png');
+const Security = require('../../Image/security.png');
+const Fitness = require('../../Image/fitness.png');
+const Report = require('../../Image/report.png');
+// const Security = require('../../Image/security.png');
+
 
 
 export const Images = {
@@ -28,5 +32,11 @@ export const Images = {
   MetroWarning,
   ArrowRight,
   discoverImage,
-  socialMedia
+  socialMedia,
+  Notifications,
+  Apartment,
+  Parking,
+  Security,
+  Fitness,
+  Report
 };

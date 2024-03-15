@@ -15,24 +15,26 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
-import { HeaderIconButton } from '../components/HeaderIconButton';
-import { AuthContext } from '../contexts/AuthContext';
-import { HeaderIconsContainer } from '../components/HeaderIconsContainer';
-import { ThemeContext } from '../contexts/ThemeContext';
-import { AuthContainer } from '../components/AuthContainer';
-import { Heading } from '../components/Heading';
+import styles from './Styles/MessageBoardStyles';
+import {HeaderIconButton} from '../../../components/HeaderIconButton';
+import {AuthContext} from '../../../contexts/AuthContext';
+import {HeaderIconsContainer} from '../../../components/HeaderIconsContainer';
+import {ThemeContext} from '../../../contexts/ThemeContext';
+import {AuthContainer} from '../../../components/AuthContainer';
+import {Heading} from '../../../components/Heading';
 import SecureStorage from 'react-native-secure-storage';
-import { UserContext } from '../contexts/UserContext';
-import { BASE_URL } from '../config';
-import { Loading } from '../components/Loading';
+import {UserContext} from '../../../contexts/UserContext';
+import {BASE_URL} from '../../../config';
+import {Loading} from '../../../components/Loading';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { EmergencyAlarmModal } from '../components/EmergencyAlarmModal';
-import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+import {EmergencyAlarmModal} from '../../../components/EmergencyAlarmModal';
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import {Images} from '../../../themes/Images';
 
-export function MessagesScreen({ navigation }) {
-  const { logout } = React.useContext(AuthContext);
+export function MessagesScreen({navigation}) {
+  const {logout} = React.useContext(AuthContext);
   const switchTheme = React.useContext(ThemeContext);
-  const { token } = React.useContext(UserContext);
+  const {token} = React.useContext(UserContext);
   const [data, setData] = React.useState([]);
   const [appUser, setAppUser] = React.useState();
   const [loading, setLoading] = React.useState(false);
@@ -58,7 +60,6 @@ export function MessagesScreen({ navigation }) {
           <HeaderIconButton
             name={'log-out'}
             onPress={() => {
-
               logout();
             }}
           />
@@ -73,7 +74,7 @@ export function MessagesScreen({ navigation }) {
   function getServices() {
     setRefreshing(false);
     setLoading(true);
-    SecureStorage.getItem('user').then((user) => {
+    SecureStorage.getItem('user').then(user => {
       if (user) {
         const userDetails = JSON.parse(user);
         setAppUser(userDetails.details);
@@ -109,7 +110,7 @@ export function MessagesScreen({ navigation }) {
   }
   function getMoreData() {
     setLoadMore(true);
-    SecureStorage.getItem('user').then((user) => {
+    SecureStorage.getItem('user').then(user => {
       if (user) {
         const userDetails = JSON.parse(user);
         setAppUser(userDetails.details);
@@ -161,7 +162,7 @@ export function MessagesScreen({ navigation }) {
       // Footer View with Loader
       <View style={styles.footer}>
         {loadMore ? (
-          <ActivityIndicator color="#FFF" style={{ margin: 15 }} />
+          <ActivityIndicator color="#FFF" style={{margin: 15}} />
         ) : null}
       </View>
     );
@@ -176,7 +177,7 @@ export function MessagesScreen({ navigation }) {
     Linking.openURL(phoneNumber);
   }
 
-  const Messages = ({ item, onPress, style }) => (
+  const Messages = ({item, onPress, style}) => (
     <View style={[styles.item, style]}>
       <View style={styles.leftView}>
         <Text style={styles.name}>{item.title}</Text>
@@ -189,150 +190,50 @@ export function MessagesScreen({ navigation }) {
     </View>
   );
 
-  const messages = ({ item }) => {
+  const messages = ({item}) => {
     return <Messages item={item} style={styles.flatListBox} />;
   };
   return (
-   
-      <AuthContainer>
-        <ScrollView>
-          <SafeAreaView
-            style={styles.mainView}
-            keyboardShouldPersistTaps="handled">
-            <View style={styles.headerBG} >
-              <Heading style={styles.titleText}>Message Board</Heading>
-              <Image source={require('../../Image/report.png')} style={styles.headerImage} />
-            </View>
-            <View style={styles.roudedLayout}>
-              <View style={styles.container}>
-                <View style={styles.listWrap}>
-                  {data && (
-                    <FlatList
-                      data={data}
-                      renderItem={messages}
-                      keyExtractor={(item) => 'ses' + item.id}
-                      initialNumToRender={10}
-                      onEndReachedThreshold={0.1}
-                      onEndReached={() => {
-                        if (isLoadMore) {
-                          getMoreData();
-                        }
-                      }}
-                      ListFooterComponent={renderFooter}
-                      refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    <AuthContainer>
+      <ScrollView>
+        <SafeAreaView
+          style={styles.mainView}
+          keyboardShouldPersistTaps="handled">
+          <View style={styles.headerBG}>
+            <Heading style={styles.titleText}>Message Board</Heading>
+            <Image source={Images.Report} style={styles.headerImage} />
+          </View>
+          <View style={styles.roudedLayout}>
+            <View style={styles.container}>
+              <View style={styles.listWrap}>
+                {data && (
+                  <FlatList
+                    data={data}
+                    renderItem={messages}
+                    keyExtractor={item => 'ses' + item.id}
+                    initialNumToRender={10}
+                    onEndReachedThreshold={0.1}
+                    onEndReached={() => {
+                      if (isLoadMore) {
+                        getMoreData();
                       }
-                    />
-                  )}
-                </View>
+                    }}
+                    ListFooterComponent={renderFooter}
+                    refreshControl={
+                      <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                      />
+                    }
+                  />
+                )}
               </View>
             </View>
-            <EmergencyAlarmModal setLoading={setLoading} />
-          </SafeAreaView>
-        </ScrollView>
-        <Loading loading={loading} />
-      </AuthContainer>
- 
+          </View>
+          <EmergencyAlarmModal setLoading={setLoading} />
+        </SafeAreaView>
+      </ScrollView>
+      <Loading loading={loading} />
+    </AuthContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  mainView: {
-    backgroundColor: '#FFF',
-  },
-  container: {
-    paddingHorizontal: 15,
-  },
-  headerImage: {
-    position: 'absolute',
-    right: 30,
-    top: 40,
-    width: 95,
-    height: 90,
-  },
-  roudedLayout: {
-    marginTop: -36,
-    paddingHorizontal: 15,
-    paddingVertical: 20,
-    backgroundColor: '#FFF',
-    borderTopRightRadius: 36,
-    borderTopLeftRadius: 36,
-  },
-  headerBG: {
-    position: 'relative',
-    height: 180,
-    width: '100%',
-    backgroundColor: '#EDB43C',
-  },
-  titleText: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    color: '#000',
-    fontSize: 22,
-    textAlign: 'left',
-  },
-  listWrap: {
-    marginTop: 20,
-  },
-  flatListBox: {
-    backgroundColor: '#FEFEFE',
-    borderRadius: 10,
-  },
-  item: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 20,
-    padding: 15,
-    borderWidth: 1,
-    borderColor: '#B2B2B2',
-    borderRadius: 5,
-  },
-  leftView: {
-    width: '75%',
-  },
-  rightView: {
-    width: '25%',
-  },
-  statusOpen: {
-    textAlign: 'center',
-    fontSize: 14,
-    fontWeight: 'bold',
-    backgroundColor: 'green',
-    borderRadius: 5,
-    paddingTop: 3,
-    paddingBottom: 3,
-    color: '#FFF',
-    textTransform: 'uppercase',
-  },
-  statusClose: {
-    textAlign: 'center',
-    fontSize: 14,
-    fontWeight: 'bold',
-    backgroundColor: 'red',
-    borderRadius: 5,
-    paddingTop: 3,
-    paddingBottom: 3,
-    color: '#FFF',
-    textTransform: 'uppercase',
-  },
-  name: {
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-  provider: {
-    marginTop: 10,
-  },
-  contact: {
-    marginTop: 5,
-  },
-  iconSize: {
-    fontSize: 16,
-  },
-  footer: {
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-});

@@ -1,33 +1,24 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import axios from 'axios';
 import {
-  Image,
   View,
-  FlatList,
-  TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
   // Picker,
   Text,
-  StyleSheet,
   ScrollView,
+  Platform,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { fontSize, isIos, spacing } from '../../constants/appStyles';
-import Picker from '../../components/popupView/picker';
-import { AuthContainer } from '../../components/AuthContainer';
-import { FilledButton } from '../../components/FilledButton';
-import { BASE_URL } from '../../config';
+import styles from './Styles/BillUpdateScrenStyles';
+import {AuthContainer} from '../../components/AuthContainer';
+import {FilledButton} from '../../components/FilledButton';
+import {BASE_URL} from '../../config';
 import SecureStorage from 'react-native-secure-storage';
-import { Loading } from '../../components/Loading';
-import { UserContext } from '../../contexts/UserContext';
-import { useNavigation } from '@react-navigation/native';
-import PopView from '../../components/popupView';
-import { validURL } from '../../components/AddFeed';
-export const Label = (props) => (
+import {UserContext} from '../../contexts/UserContext';
+export const Label = props => (
   <Text style={styles.labelText}>{props.value}</Text>
 );
-export const InputBox = (props) => (
+export const InputBox = props => (
   <TextInput
     style={{
       // ...styles.input(props.multiline),
@@ -43,9 +34,9 @@ class UpdateBillScreen extends Component {
     super(props);
     this.state = {};
   }
-  state = { user: '' };
-  updateUser = (user) => {
-    this.setState({ user: user });
+  state = {user: ''};
+  updateUser = user => {
+    this.setState({user: user});
   };
 
   static contextType = UserContext;
@@ -64,9 +55,9 @@ class UpdateBillScreen extends Component {
   }
 
   validate = () => {
-    const { next, saveState } = this.props;
-    const { state } = this;
-    const { floor_plan } = state;
+    const {next, saveState} = this.props;
+    const {state} = this;
+    const {floor_plan} = state;
     let errors = {};
     if (!floor_plan) {
       errors.floor_plan = 'Please enter First Name';
@@ -80,7 +71,7 @@ class UpdateBillScreen extends Component {
 
     console.log('validate', state, errors);
     if (Object.keys(errors).length) {
-      this.setState({ errors });
+      this.setState({errors});
       return;
     }
     //saveState(this.state);
@@ -90,11 +81,11 @@ class UpdateBillScreen extends Component {
 
   submit = () => {
     const state = this.props.getState() || {};
-    const { token } = this.context;
+    const {token} = this.context;
 
     // return;
-    this.setState({ loading: true });
-    SecureStorage.getItem('user').then((user) => {
+    this.setState({loading: true});
+    SecureStorage.getItem('user').then(user => {
       if (user) {
         const userDetails = JSON.parse(user);
         const isEdit = this.state.isEdit;
@@ -120,7 +111,9 @@ class UpdateBillScreen extends Component {
         // return;
         axios
           .post(
-            `${BASE_URL}/${isEdit ? 'about-apartments-update' : 'about-apartments-update'}`,
+            `${BASE_URL}/${
+              isEdit ? 'about-apartments-update' : 'about-apartments-update'
+            }`,
             formData,
             {
               headers: {
@@ -134,12 +127,16 @@ class UpdateBillScreen extends Component {
     });
   };
 
-  onSuccess = (response) => {
-    this.setState({ loading: false });
+  onSuccess = response => {
+    this.setState({loading: false});
     const propsState = this.props.getState() || {};
-    const { backScreen } = propsState;
-    console.log({ response, props: this.props });
-    alert(this.state.isEdit ? 'User Details Update Successfully' : 'User Details Update Successfully');
+    const {backScreen} = propsState;
+    console.log({response, props: this.props});
+    alert(
+      this.state.isEdit
+        ? 'User Details Update Successfully'
+        : 'User Details Update Successfully',
+    );
 
     const state = this.props.getState() || {};
 
@@ -148,43 +145,45 @@ class UpdateBillScreen extends Component {
     // }, 1000);
   };
 
-  onFail = (error) => {
-    this.setState({ loading: false });
+  onFail = error => {
+    this.setState({loading: false});
     console.log(error.response);
     alert(`Failed: ${error.data ? error.data.message : 'Add Failed'}`);
   };
 
-  setChecked = (value) => {
-    this.setState({ checked: value });
+  setChecked = value => {
+    this.setState({checked: value});
   };
 
   handleChange = (text, name) => {
-    const errors = { ...this.state.errors };
+    const errors = {...this.state.errors};
     errors[name] = undefined;
-    this.setState({ [name]: text, errors });
+    this.setState({[name]: text, errors});
   };
 
   render() {
-    const { errors = {} } = this.state;
+    const {errors = {}} = this.state;
 
     return (
       <AuthContainer>
         <KeyboardAvoidingView
-          behavior={Platform.OS == 'ios' ? 'padding' : 'height'} >
-          <ScrollView keyboardShouldPersistTaps="handled" style={styles.mainView}>
+          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            style={styles.mainView}>
             <View style={styles.container}>
-                <Text style={styles.lableInput}>Floor Plan</Text>
-                <View style={styles.SectionStyle}>
-                  <InputBox
-                    onChangeText={(text) => this.handleChange(text, 'floor_plan')}
-                    value={this.state.floor_plan}
-                    placeholder={'Floor Plan'}
-                    style={styles.textInput}
-                  />
-                  <Text style={{ color: 'red' }}>{errors.floor_plan}</Text>
-                </View>
+              <Text style={styles.lableInput}>Floor Plan</Text>
+              <View style={styles.SectionStyle}>
+                <InputBox
+                  onChangeText={text => this.handleChange(text, 'floor_plan')}
+                  value={this.state.floor_plan}
+                  placeholder={'Floor Plan'}
+                  style={styles.textInput}
+                />
+                <Text style={{color: 'red'}}>{errors.floor_plan}</Text>
+              </View>
 
-                {/* <Text style={styles.lableInput}>Middle Name</Text>
+              {/* <Text style={styles.lableInput}>Middle Name</Text>
               <View style={styles.SectionStyle}>
                 <InputBox
                   onChangeText={(text) => this.handleChange(text, 'middle_name')}
@@ -234,10 +233,13 @@ class UpdateBillScreen extends Component {
                 <Text style={{ color: 'red' }}>{errors.phone_number}</Text>
               </View> */}
 
-                {/* <Button onPress={this.nextStep} style={styles.loginButton}/> */}
-                <FilledButton title={'Update'} onPress={this.validate} style={styles.loginButton} />
-              </View>
-           
+              {/* <Button onPress={this.nextStep} style={styles.loginButton}/> */}
+              <FilledButton
+                title={'Update'}
+                onPress={this.validate}
+                style={styles.loginButton}
+              />
+            </View>
           </ScrollView>
         </KeyboardAvoidingView>
       </AuthContainer>
@@ -246,151 +248,3 @@ class UpdateBillScreen extends Component {
 }
 
 export default UpdateBillScreen;
-
-const styles = StyleSheet.create({
-  mainView: {
-    height: '100%',
-    backgroundColor: '#EDB43C',
-  },
-  container: {
-    paddingHorizontal: 20,
-  },
-  SectionStyle: {
-    height: 40,
-    marginTop: 20,
-  },
-  ImageSectionStyle: {
-    marginTop: 20,
-  },
-  pickersection: {
-    width: 100,
-  },
-  titleTextStyle: {
-    color: '#FFF',
-    fontSize: 40,
-    textAlign: 'left',
-    fontWeight: 'bold',
-  },
-  titleCaptionStyle: {
-    marginBottom: 20,
-    color: '#FFF',
-    fontSize: 20,
-    textAlign: 'left',
-    fontWeight: 'bold',
-  },
-  lableInput: {
-    marginTop: 20,
-    color: '#000',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  textInput: {
-    color: '#000',
-    paddingLeft: 0,
-    paddingRight: 0,
-    borderWidth: 0,
-    borderRadius: 0,
-    borderColor: '#000',
-    borderBottomColor: '#000',
-    borderBottomWidth: 1,
-  },
-  forgotTextStyle: {
-    marginBottom: 30,
-    color: '#FFF',
-    textAlign: 'right',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  orwithTextStyle: {
-    marginBottom: 20,
-    color: '#FFF',
-    textAlign: 'center',
-    fontSize: 14,
-  },
-  registerTextStyle: {
-    color: '#FFF',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  flatListBox: {
-    width: '100%',
-    backgroundColor: '#000',
-    color: '#FFF',
-  },
-  loginButton: {
-    marginLeft: 0,
-    width: '100%',
-    backgroundColor: '#000',
-    color: '#FFF',
-  },
-  selectImg: {
-    padding: 12,
-    marginLeft: 0,
-    borderRadius: 20,
-    width: 120,
-    backgroundColor: '#000',
-    color: '#FFF',
-    textAlign: 'center',
-  },
-  haveAccount: {
-    marginBottom: 20,
-    color: '#FFF',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  errorTextStyle: {
-    marginTop: 15,
-    color: 'red',
-    textAlign: 'left',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  contactGrids: {
-    width: '100%',
-  },
-  TimeText: {
-    width: '50%',
-  },
-  picker: {
-    height: 50,
-    width: 150,
-    color: '#fff',
-    borderBottomWidth: 2,
-    borderColor: '#FFF',
-  },
-  drinkCard: {
-    height: 40,
-    marginTop: 20,
-    margin: 10,
-    paddingLeft: 6,
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginBottom: 16,
-    elevation: 1,
-    borderRadius: 4,
-  },
-  TextareaSectionStyle: {
-    marginTop: 20,
-    margin: 10,
-  },
-  textareaContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 5,
-  },
-  textarea: {
-    textAlignVertical: 'top',
-    height: 170,
-    fontSize: 14,
-    color: '#000',
-  },
-  listItem: {
-    width: 100,
-    marginRight: 20,
-  },
-  listingImage: {
-    width: 100,
-    height: 100,
-  },
-});

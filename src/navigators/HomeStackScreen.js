@@ -3,7 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {HomeScreen} from '../screens/Dashboard/Home/HomeScreen';
 import {AdvertiseScreen} from '../screens/AdvertiseScreen';
-import {MessagesScreen} from '../screens/MessagesScreen';
+import {MessagesScreen} from '../screens/Dashboard/MessageBoard/MessagesScreen';
 
 const HomeStack = createStackNavigator();
 

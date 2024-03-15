@@ -4,7 +4,7 @@ import {ServiceScreen} from '../screens/ServiceScreen';
 import {FacilityScreen} from '../screens/FacilityScreen';
 import {IssueScreen} from '../screens/IssueScreen';
 import {PollsScreen} from '../screens/PollsScreen';
-import {MessagesScreen} from '../screens/MessagesScreen';
+import {MessagesScreen} from '../screens/Dashboard/MessageBoard/MessagesScreen';
 import {VisitorsScreen} from '../screens/VisitorsScreen';
 import {LoyaltyCardScreen} from '../screens/LoyaltyCardScreen';
 import {EmergencyNumbersScreen} from '../screens/EmergencyNumbersScreen';

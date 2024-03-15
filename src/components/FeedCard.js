@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     height: 55,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRightWidth: 1,
+    borderRightWidth: 0.5,
     borderRightColor: 'gray',
   },
   noButton: {
@@ -299,5 +299,7 @@ const styles = StyleSheet.create({
     height: 55,
     alignItems: 'center',
     justifyContent: 'center',
+    borderLeftWidth: 0.5,
+    borderLeftColor: 'gray',
   },
 });
