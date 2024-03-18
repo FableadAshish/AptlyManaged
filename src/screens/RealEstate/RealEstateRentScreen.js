@@ -9,37 +9,28 @@ import {
   KeyboardAvoidingView,
   Text,
   ImageBackground,
-  SectionList,
   TouchableOpacity,
   Image,
   ScrollView,
   RefreshControl,
   Dimensions,
 } from 'react-native';
-import {Heading} from '../components/Heading';
-import {AuthContext} from '../contexts/AuthContext';
-import {ThemeContext} from '../contexts/ThemeContext';
-import {Input} from '../components/Input';
-import {FilledButton} from '../components/FilledButton';
-import {UserContext} from '../contexts/UserContext';
+import {Heading} from '../../components/Heading';
+import {AuthContext} from '../../contexts/AuthContext';
+import {ThemeContext} from '../../contexts/ThemeContext';
+import {UserContext} from '../../contexts/UserContext';
 import SecureStorage from 'react-native-secure-storage';
-import {Error} from '../components/Error';
-import {Success} from '../components/Success';
-import {AuthContainer} from '../components/AuthContainer';
-import {Loading} from '../components/Loading';
-import {BASE_URL} from '../config';
+import {Loading} from '../../components/Loading';
+import {BASE_URL} from '../../config';
 import Moment from 'moment';
-import {EmergencyAlarmModal} from '../components/EmergencyAlarmModal';
-import {Formik} from 'formik';
-import * as yup from 'yup';
+import {EmergencyAlarmModal} from '../../components/EmergencyAlarmModal';
 const {width, height} = Dimensions.get('window');
 import Icon from 'react-native-vector-icons/Ionicons';
-import {spacing} from '../constants/appStyles';
-import PropertyFilters from '../components/PropertyFilters';
-import Picker from '../components/popupView/picker';
-import {defaultPropertyImage} from './MyPropertyListingScreen';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
-import {Colors} from '../themes/Colors';
+import {spacing} from '../../constants/appStyles';
+import PropertyFilters from '../../components/PropertyFilters';
+import Picker from '../../components/popupView/picker';
+import {defaultPropertyImage} from '../MyPropertyListingScreen';
+import {Images} from '../../themes/Images';
 
 axios.interceptors.response.use(
   function (response) {
@@ -67,7 +58,7 @@ axios.interceptors.request.use(
   },
 );
 
-export function RealEstateScreen({navigation, route}) {
+export function RealEstateRentScreen({navigation, route}) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState('');
   const [success, setSuccess] = React.useState('');
@@ -86,8 +77,6 @@ export function RealEstateScreen({navigation, route}) {
   const [mounted, setMounted] = React.useState(false);
 
   const {params = {}} = route;
-  console.log('RealEstateScreen params', params);
-  const [propertyType, setPropertyType] = React.useState(params.property_type);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -121,7 +110,6 @@ export function RealEstateScreen({navigation, route}) {
       (filter && Object.keys(filter).length) || sort !== 'recent';
 
     const filterData = new FormData();
-
     if (isFilter) {
       if (Object.keys(filter).length) {
         Object.keys(filter).map(f => {
@@ -131,18 +119,13 @@ export function RealEstateScreen({navigation, route}) {
       filterData.append('sortBy', sort);
     }
 
-    const defaultData = new FormData();
-    if (propertyType) {
-      filterData.append('property_type', propertyType);
-      defaultData.append('property_type', propertyType);
-    }
-    let url = isFilter ? 'filters' : 'get-realEstate';
+    let url = isFilter ? 'filters' : 'rent-realEstate';
     setData({});
     SecureStorage.getItem('user').then(user => {
       if (user) {
         const userDetails = JSON.parse(user);
         setAppUser(userDetails.details);
-        const data = isFilter ? filterData : defaultData;
+        const data = isFilter ? filterData : {};
         axios
           .post(`${BASE_URL}/${url}`, data, {
             headers: {
@@ -192,10 +175,6 @@ export function RealEstateScreen({navigation, route}) {
     getServices(value);
   };
 
-  function formatNumber(num) {
-    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
-  }
-
   const Service = ({item, onPress, style, navigation}) => {
     const image = item.image
       ? item.image
@@ -223,7 +202,7 @@ export function RealEstateScreen({navigation, route}) {
           {item.description}
         </Text>
         <View style={styles.listingDetail}>
-          <Text style={styles.price}>£{formatNumber(item.price)}</Text>
+          <Text style={styles.price}>£{item.price}</Text>
           <View style={styles.time}>
             <Icon name="time-outline" size={16} style={styles.timeIcon} />
             <Text>{Moment(item.created_at).fromNow()}</Text>
@@ -249,23 +228,8 @@ export function RealEstateScreen({navigation, route}) {
         keyboardShouldPersistTaps="handled">
         <View>
           <KeyboardAvoidingView enabled>
-            <Icon
-              name="arrow-back"
-              size={30}
-              style={{
-                // position: 'absolute',
-                // top: 35,
-                color: 'black',
-                // zIndex: 1000,
-                // left: 20,
-                paddingTop: 20,
-                backgroundColor: Colors.primarColor,
-                paddingLeft: 20,
-              }}
-              onPress={() => navigation.goBack()}
-            />
             <ImageBackground
-              source={require('../../Image/real-estateDetail-banner.png')}
+              source={Images.EstateDetail}
               style={styles.headerBG}>
               <Heading style={styles.titleText}>Real Estate</Heading>
             </ImageBackground>
@@ -275,10 +239,7 @@ export function RealEstateScreen({navigation, route}) {
           <TouchableOpacity
             style={{flexDirection: 'row'}}
             onPress={() => setShowFilters(true)}>
-            <Image
-              source={require('../../Image/filter.png')}
-              style={styles.iconImage}
-            />
+            <Image source={Images.Filter} style={styles.iconImage} />
             <Text style={styles.filters}>Filters</Text>
             {filterLength ? (
               <View style={styles.filterLabel}>
@@ -288,12 +249,9 @@ export function RealEstateScreen({navigation, route}) {
           </TouchableOpacity>
           <TouchableOpacity
             style={{flexDirection: 'row'}}
-            // onPress={() => alert('Shorting')}
+            //   onPress={() => alert('Shorting')}
           >
-            <Image
-              source={require('../../Image/sort.png')}
-              style={styles.iconImageSort}
-            />
+            <Image source={Images.Sort} style={styles.iconImageSort} />
             <Text style={styles.filters}>Sorting</Text>
           </TouchableOpacity>
           <Picker

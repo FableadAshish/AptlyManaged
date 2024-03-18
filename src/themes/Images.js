@@ -18,7 +18,16 @@ const Parking = require('../../Image/parking.png');
 const Security = require('../../Image/security.png');
 const Fitness = require('../../Image/fitness.png');
 const Report = require('../../Image/report.png');
-// const Security = require('../../Image/security.png');
+const Sort = require('../../Image/sort.png');
+const EstateDetail = require('../../Image/real-estateDetail-banner.png');
+const Filter = require('../../Image/filter.png');
+const PhoneWithBg = require('../../Image/phonewithbg.png');
+const Bath = require('../../Image/bath.png');
+const MailWithBg = require('../../Image/mailwithbg.png');
+const Bed = require('../../Image/bed.png');
+const Lease = require('../../Image/lease.png');
+const LineShape = require('../../Image/line-shape.png');
+
 
 
 
@@ -38,5 +47,14 @@ export const Images = {
   Parking,
   Security,
   Fitness,
-  Report
+  Report,
+  Sort,
+  EstateDetail,
+  Filter,
+  PhoneWithBg,
+  MailWithBg,
+  Bed,
+  Bath,
+  Lease,
+  LineShape
 };

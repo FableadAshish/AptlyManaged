@@ -28,7 +28,7 @@ import * as yup from 'yup';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {UserContext} from '../contexts/UserContext';
-import SecureStorage from 'react-native-secure-storage';
+// import SecureStorage from 'react-native-secure-storage';
 import Textarea from 'react-native-textarea';
 
 export class FormStep1 extends Component {
