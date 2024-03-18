@@ -23,34 +23,35 @@ export function TabsStackNavigator({navigation}) {
       style={styles.tabsWrap}
       screenOptions={({route}) => ({
         tabBarStyle:{backgroundColor: Colors.primarColor},
-        tabBarIcon: ({focused, color, size}) => {
-          let iconName;
-          size = 50;
-          if (route.name === 'Home') {
-            iconName = focused ? 'ios-home' : 'ios-home-outline';
-          } else if (route.name === 'Services') {
-            iconName = focused ? 'layers' : 'layers-outline';
-          }
-          // else if (route.name === 'Issue') {
-          //   size = 48;
-          //   iconName = focused ? 'help-circle' : 'help-circle-outline';
-          // }
+        headerShown:false,
+        // tabBarIcon: ({focused, color, size}) => {
+        //   let iconName;
+        //   size = 50;
+        //   if (route.name === 'Home') {
+        //     iconName = focused ? 'ios-home' : 'ios-home-outline';
+        //   } else if (route.name === 'Services') {
+        //     iconName = focused ? 'layers' : 'layers-outline';
+        //   }
+        //   // else if (route.name === 'Issue') {
+        //   //   size = 48;
+        //   //   iconName = focused ? 'help-circle' : 'help-circle-outline';
+        //   // }
 
-          // You can return any component that you like here!
-          if (route.name === 'Issue') {
-            return (
-              <Icon
-                style={styles.middleTab}
-                name={iconName}
-                size={size}
-                color={color}
-              />
-            );
-          }
-          // else {
-          //   return <Icon name={iconName} size={size} color={color} />;
-          // }
-        },
+        //   // You can return any component that you like here!
+        //   if (route.name === 'Issue') {
+        //     return (
+        //       <Icon
+        //         style={styles.middleTab}
+        //         name={iconName}
+        //         size={size}
+        //         color={color}
+        //       />
+        //     );
+        //   }
+        //   // else {
+        //   //   return <Icon name={iconName} size={size} color={color} />;
+        //   // }
+        // },
       })}
       tabBarOptions={{
         tabBarVisible: true,
@@ -88,9 +89,11 @@ export function TabsStackNavigator({navigation}) {
 
       <Tab.Screen
         name="Notification"
-        style={styles.helpTab}
+        component={NotificationScreen}
+        onPress={() => navigation.navigate('Notification')}
         options={{
-          tabBarVisible: true,
+          // tabBarVisible: true,
+           headerShown:false,
           tabBarLabel: 'Notifications',
           tabBarIcon: ({tintColor}) => (
             <Image
@@ -99,8 +102,7 @@ export function TabsStackNavigator({navigation}) {
             />
           ),
         }}
-        component={NotificationScreen}
-        onPress={() => navigation.navigate('Notification')}
+        
       />
       <Tab.Screen
         name="Feeds"

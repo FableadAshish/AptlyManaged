@@ -68,15 +68,15 @@ export function StackNavigator({navigation}) {
         name="drawer"
         component={DrawerNavigator}
         options={{
-          title: '',
+          // title: '',
           headerLeft: () => <HamburgerMenu />,
-          // headerShown:true,
+          headerShown:'',
         }}
       />
       <Stack.Screen
         name="EmergencyNumbers"
         component={EmergencyNumbersScreen}
-        options={{title: ''}}
+        options={{title: '', headerShown:'true'}}
       />
       <Stack.Screen
         name="AboutApartmentScreen"
@@ -224,7 +224,11 @@ export function StackNavigator({navigation}) {
         component={LoginScreen}
         options={{title: 'Login'}}
       />
-      <Stack.Screen name="Chat" component={ChatScreen} options={{title: ''}} />
+      <Stack.Screen 
+      name="Chat" 
+      component={ChatScreen} 
+      options={{title: ''}} 
+      />
       <Stack.Screen
         name="ChatListing"
         component={ChatListingScreen}

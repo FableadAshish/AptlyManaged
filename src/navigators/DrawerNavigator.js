@@ -40,7 +40,7 @@ const width = Dimensions.get('screen').width;
 export function DrawerNavigator() {
   return (
     <Drawer.Navigator
-      // captureGestures={true}
+      captureGestures={true}
       initialRouteName="Home"
       screenOptions={{
         drawerStyle: {
@@ -48,7 +48,7 @@ export function DrawerNavigator() {
         },
         headerShown: true,
         title: '',
-        headerStyle: {backgroundColor: Colors.primarColor},
+        headerStyle: {backgroundColor: 'red'},
         // screenOptions={{}}
       }}
       // screenOptions={{ drawerLabel: null }}
@@ -58,7 +58,7 @@ export function DrawerNavigator() {
       <Drawer.Screen
         name="Home"
         component={TabsStackNavigator}
-        options={{headerShown: ''}}
+        options={{headerShown: false}}
       />
     </Drawer.Navigator>
   );

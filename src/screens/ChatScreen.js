@@ -45,6 +45,7 @@ import * as yup from 'yup';
 import { EmergencyAlarmModal } from '../components/EmergencyAlarmModal';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Colors } from '../themes/Colors';
+import { isAndroid, isIos } from '../constants/appStyles';
 export const defaultMaleImage = 'public/front/images/nomale.png';
 export const defaultFeMaleImage = 'public/front/images/nofemale.jpg';
 export function ChatScreen({ navigation, route }) {
@@ -371,12 +372,11 @@ export function ChatScreen({ navigation, route }) {
         <Loading loading={loading} />
 
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : ''}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}>
+          behavior={Platform.OS === 'ios' ? 'padding' : ''}>
           <View
             style={{
               //  paddingBottom: 40,
-              backgroundColor: '#fff',
+              // backgroundColor: 'red',
             }}>
             <Formik
               validationSchema={validationSchema}
@@ -432,12 +432,13 @@ export function ChatScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   mainView: {
-    flex: 1,
+    // flex: 1,
   },
   headerBG: {
     position: 'relative',
     height: 180,
     width: '100%',
+    // marginTop: isAndroid ? -50 : 'auto',
   },
   titleText: {
     position: 'absolute',

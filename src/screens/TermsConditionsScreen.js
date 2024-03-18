@@ -42,8 +42,9 @@ export function TermsConditionsScreen({navigation}) {
               onPress={() => {
                 navigation.goBack(null);
               }}
-              style={{margin: 10, flexDirection: 'row', alignItems: 'center'}}>
-              <FIcon name="chevron-left" size={25} />
+              style={{margin: 10, flexDirection: 'row', alignItems: 'center'}}
+              >
+              <FIcon name="chevron-left" size={25} color={'black'}/>
               {/* <Text style={{fontWeight: 'bold'}}>Back</Text> */}
             </TouchableOpacity>
             <Heading style={styles.titleText}>User Policy</Heading>

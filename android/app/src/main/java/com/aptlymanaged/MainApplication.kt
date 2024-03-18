@@ -1,4 +1,4 @@
-package com.aptlymanaged
+package com.aptly
 import android.app.Application
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication

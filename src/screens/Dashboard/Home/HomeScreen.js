@@ -257,7 +257,7 @@ export function HomeScreen() {
             name={'menu'}
             onPress={() => navigation.openDrawer()}
             size={30}
-            style={{left: 25, bottom: 15}}
+            style={{left: 25, bottom: 40}}
           />
 
           <Text style={styles.greetText}>

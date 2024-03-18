@@ -120,7 +120,7 @@ export function EmergencyNumbersScreen({route, navigation}) {
   return (
     <AuthContainer>
       <View style={styles.mainView}>
-      <Icon
+      {/* <Icon
           name="arrow-back"
           size={30}
           style={{
@@ -133,7 +133,7 @@ export function EmergencyNumbersScreen({route, navigation}) {
             paddingLeft: 25,
           }}
           onPress={()=>navigation.goBack()}
-        />
+        /> */}
         <View style={styles.headerBG}>
           <Heading style={styles.titleText}>Emergency Numbers</Heading>
           <Image
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   mainView: {
     backgroundColor: Colors.primarColor,
     flex:1,
-    paddingTop:60
+    // paddingTop:60
   },
   container: {
     paddingHorizontal: 15,
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     height: 180,
     width: '100%',
     backgroundColor: '#EDB43C',
-    marginTop: 20
+    // marginTop: 20
   },
   titleText: {
     // position: 'absolute',

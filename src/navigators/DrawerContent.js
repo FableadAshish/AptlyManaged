@@ -1,47 +1,35 @@
-import React, {useContext, useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  ActivityIndicator,
-  Image,
-  SafeAreaView,
-} from 'react-native';
-import {Text} from 'react-native-paper';
+import React, { useContext, useState } from 'react';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import { Text } from 'react-native-paper';
 import axios from 'axios';
-import {DrawerContentScrollView} from '@react-navigation/drawer';
-import {fontSize, spacing} from '../constants/appStyles';
+import { DrawerContentScrollView } from '@react-navigation/drawer';
+import { fontSize, isIos, spacing } from '../constants/appStyles';
 import MainMenu from '../components/DrawerContent/MainMenu';
 import SubMenu from '../components/DrawerContent/SubMenu';
-import {DrawerActions} from '@react-navigation/native';
-import {Context} from '../hooks/Store';
-import {useEffect} from 'react';
+import { DrawerActions } from '@react-navigation/native';
+import { Context } from '../hooks/Store';
+import { useEffect } from 'react';
 import SecureStorage from 'react-native-secure-storage';
-import {useIsDrawerOpen} from '@react-navigation/drawer';
-import {useDrawerStatus} from '@react-navigation/drawer';
+import { useDrawerStatus } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {AuthContext} from '../contexts/AuthContext';
-import {UserContext} from '../contexts/UserContext';
-import {useNavigation} from '@react-navigation/native';
+import { AuthContext } from '../contexts/AuthContext';
+import { UserContext } from '../contexts/UserContext';
 import messaging from '@react-native-firebase/messaging';
-import {BASE_URL} from '../config';
-import {Dimensions} from 'react-native';
+import { BASE_URL } from '../config';
 export function DrawerContent(props) {
   const [subMenu, setSubmenu] = useState(null);
-  const {token} = React.useContext(UserContext);
+  const { token } = React.useContext(UserContext);
   const [state, dispatch] = useContext(Context);
-  const navigation = useNavigation();
   const drawerOpen = useDrawerStatus() === 'open';
   const closeSubmenu = state.closeSubmenu;
-  const {logout} = React.useContext(AuthContext);
-  const width = Dimensions.get('window');
+  const { logout } = React.useContext(AuthContext);
   const [loading, setLoading] = React.useState(false);
   useEffect(() => {
-    dispatch({type: 'DRAWER_STATE', open: drawerOpen});
+    dispatch({ type: 'DRAWER_STATE', open: drawerOpen });
   }, [drawerOpen]);
 
   useEffect(() => {
-    dispatch({type: 'DRAWER_SUB_MENU', open: subMenu});
+    dispatch({ type: 'DRAWER_SUB_MENU', open: subMenu });
   }, [subMenu]);
 
   useEffect(() => {
@@ -51,15 +39,16 @@ export function DrawerContent(props) {
   }, [closeSubmenu]);
 
   const redirect = (to, params = {}) => {
-    dispatch({type: 'DRAWER_STATE', payload: Math.random()});
+    dispatch({ type: 'DRAWER_STATE', payload: Math.random() });
     props.navigation.navigate(to, params);
     setSubmenu(null);
     props.navigation.dispatch(DrawerActions.closeDrawer());
   };
 
   const userLogout = () => {
-    setLoading(true);
-    SecureStorage.getItem('user').then(user => {
+    
+    setLoading(true)
+    SecureStorage.getItem('user').then((user) => {
       if (user) {
         const userDetails = JSON.parse(user);
         axios
@@ -78,32 +67,31 @@ export function DrawerContent(props) {
           .then(function (response) {
             setLoading(false);
             // await messaging().deleteToken();
-            logout();
+            logout()
           })
           .catch(function (error) {
             setLoading(false);
           });
       }
     });
-  };
+  }
+
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* <View> */}
-        <Icon
+    <View style={styles.container}>
+       <Icon
           name="arrow-back"
           size={30}
           style={{
-            // position: 'absolute',
-            // top: 35,
+            position: 'absolute',
+            top: isIos? 60: 20,
             color: 'black',
-            // zIndex: 1000,
+            zIndex: 1000,
             left: 20,
           }}
-          onPress={() => navigation.goBack()}
+          onPress={() => props.navigation.goBack()}
         />
-      {/* </View> */}
-      <DrawerContentScrollView {...props} style={{flex: 1}}>
+      <DrawerContentScrollView {...props} style={{ flex: 1, marginTop: 50 }}>
         <Text
           style={{
             textAlign: 'center',
@@ -132,38 +120,30 @@ export function DrawerContent(props) {
         </View>
       </DrawerContentScrollView>
       <View style={styles.bottomMenu}>
-        <TouchableOpacity
-          onPress={() => redirect('Home')}
-          style={styles.menuView}>
+        <TouchableOpacity onPress={() => redirect('Home')} style={styles.menuView}>
           <Icon name="business-outline" size={22} color="white" />
           <Text style={styles.menuText}>Dashboard</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => redirect('Documents')}
-          style={styles.menuView}>
-          <Icon name="document-outline" size={22} color="white" />
+        <TouchableOpacity onPress={() => redirect('Home')} style={styles.menuView}>
+          <Icon name="documents-outline" size={22} color="white" />
           <Text style={styles.menuText}>Documents</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => redirect('Profile')}
-          style={styles.menuView}>
+        <TouchableOpacity onPress={() => redirect('Profile')} style={styles.menuView}>
           <Icon name="person-outline" size={22} color="white" />
           <Text style={styles.menuText}>My Profile</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={async () => {
-            userLogout();
-          }}
-          style={styles.menuView}>
+        <TouchableOpacity onPress={async () => {
+          userLogout()
+        }} style={styles.menuView}>
           <Icon name="log-out-outline" size={22} color="white" />
-          {loading ? (
-            <ActivityIndicator size="small" color="#fff" />
-          ) : (
-            <Text style={styles.menuText}>Logout</Text>
-          )}
+          {
+            loading ? <ActivityIndicator size="small" color="#fff" />
+              : <Text style={styles.menuText}>Logout</Text>
+          }
+
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -176,14 +156,15 @@ const styles = StyleSheet.create({
   drawerContent: {
     width: '100%',
     flex: 1,
-    // height: 500,
+    height: 500,
+    marginTop: 20
   },
   drawerSection: {
     width: '100%',
-    // flex: 1,
-    // height: 500,
+    flex: 1,
+    height: 500,
     marginTop: 150,
-    // position: 'absolute',
+    position: 'absolute',
     top: 0,
     // marginLeft: spacing(4),
   },

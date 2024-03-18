@@ -1,4 +1,4 @@
-package com.aptlymanaged
+package com.aptly
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
