@@ -45,13 +45,13 @@ import {styles} from './Styles/RealEstateScreenStyles';
 
 axios.interceptors.response.use(
   function (response) {
-    console.log('interceptor response', response);
+    // console.log('interceptor response', response);
     response.config.meta.responseTime =
       new Date().getTime() - response.config.meta.requestTimestamp;
     return response;
   },
   function (error) {
-    console.log('interceptor response error', error);
+    // console.log('interceptor response error', error);
     return Promise.reject(error);
   },
 );
@@ -251,7 +251,7 @@ export function RealEstateScreen({navigation, route}) {
         keyboardShouldPersistTaps="handled">
         <View>
           <KeyboardAvoidingView enabled>
-            <Icon
+            {/* <Icon
               name="arrow-back"
               size={30}
               style={{
@@ -265,7 +265,7 @@ export function RealEstateScreen({navigation, route}) {
                 paddingLeft: 20,
               }}
               onPress={() => navigation.goBack()}
-            />
+            /> */}
             <ImageBackground
               source={Images.EstateDetail}
               style={styles.headerBG}>

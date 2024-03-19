@@ -48,7 +48,7 @@ export function DrawerNavigator() {
         },
         headerShown: true,
         title: '',
-        headerStyle: {backgroundColor: 'red'},
+        headerStyle: {backgroundColor: Colors.primarColor},
         // screenOptions={{}}
       }}
       // screenOptions={{ drawerLabel: null }}

@@ -190,11 +190,11 @@ export function FeedsCommentScreen({ route, navigation }) {
         <ImageBackground
           source={require('../../Image/plain-background.png')}
           style={styles.headerBG}>
-          <Icon
+          {/* <Icon
             name="arrow-back"
             style={styles.backicon}
             onPress={() => navigation.goBack()}
-          />
+          /> */}
           <Heading style={styles.titleText}>Message Board</Heading>
         </ImageBackground>
         <FeedCard

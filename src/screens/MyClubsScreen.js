@@ -16,7 +16,7 @@ export const MyClubs = () => {
   return (
     <View style={{height: '100%', width: '100%'}}>
         <View style={styles.headerContent}>
-          <Icon
+          {/* <Icon
             name="arrow-back"
             size={30}
             style={{
@@ -30,7 +30,7 @@ export const MyClubs = () => {
               paddingLeft: 20,
             }}
             onPress={() => navigation.goBack()}
-          />
+          /> */}
           <Icon
             name="add-outline"
             size={30}

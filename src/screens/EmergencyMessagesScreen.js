@@ -154,7 +154,7 @@ export function EmergencyMessagesScreen({navigation}) {
   return (
     <AuthContainer>
       <SafeAreaView style={styles.mainView} keyboardShouldPersistTaps="handled">
-        <Icon
+        {/* <Icon
           name="arrow-back"
           size={30}
           style={{
@@ -167,7 +167,7 @@ export function EmergencyMessagesScreen({navigation}) {
             paddingLeft: 25,
           }}
           onPress={() => navigation.goBack()}
-        />
+        /> */}
         <View style={styles.headerBG}>
           <Heading style={styles.titleText}>
             Emergency Alerts {data.length}

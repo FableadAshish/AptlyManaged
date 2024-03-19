@@ -32,42 +32,52 @@ export function HomeScreen() {
   const [appUser, setAppUser] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [chatMessageCount, setChaMessageCount] = React.useState(0);
   const isFocused = useIsFocused();
   const navigation = useNavigation();
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getHomeDetails();
   }, []);
+
+  // console.log('check live messagews', data)
   function getHomeDetails() {
     setRefreshing(false);
     setLoading(true);
-    SecureStorage.getItem('user').then(user => {
-      if (user) {
-        const userDetails = JSON.parse(user);
-        setAppUser(userDetails.details);
-        axios
-          .post(
-            `${BASE_URL}/home`,
-            {
-              company_id: userDetails.details.company_id,
-              unit_id: userDetails.details.unit_id,
-              user_id: userDetails.details.id,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
+    // const getLiveMessages = setInterval(()=>{
+      SecureStorage.getItem('user').then(user => {
+        if (user) {
+          const userDetails = JSON.parse(user);
+          setAppUser(userDetails.details);
+          axios
+            .post(
+              `${BASE_URL}/home`,
+              {
+                company_id: userDetails.details.company_id,
+                unit_id: userDetails.details.unit_id,
+                user_id: userDetails.details.id,
               },
-            },
-          )
-          .then(function (response) {
-            setLoading(false);
-            setData(response.data.data);
-          })
-          .catch(function () {
-            setLoading(false);
-          });
-      }
-    });
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              },
+            )
+            .then(function (response) {
+              setLoading(false);
+              setData(response.data.data);
+              setChaMessageCount(response.data.data.messageCount)
+            })
+            .catch(function () {
+              setLoading(false);
+            });
+        }
+      });
+    // }, 3000)
+
+    // return () => {
+    //   clearInterval(getLiveMessages);
+    // }
   }
 
   React.useEffect(
@@ -83,9 +93,9 @@ export function HomeScreen() {
 
     messaging().onTokenRefresh(fcmToken => {
       // Process your token as required
-      console.log('fcmToken onTokenRefresh', fcmToken);
+      // console.log('fcmToken onTokenRefresh', fcmToken);
       saveUserDeviceToken(fcmToken);
-      console.log('fcmToken onTokenRefresh after', fcmToken);
+      // console.log('fcmToken onTokenRefresh after', fcmToken);
     });
 
     messaging().onNotificationOpenedApp(remoteMessage => {
@@ -132,7 +142,7 @@ export function HomeScreen() {
   }, []);
 
   function saveUserDeviceToken(deviceToken) {
-    console.log('deviceToken', deviceToken);
+    // console.log('deviceToken', deviceToken);
     setLoading(true);
     SecureStorage.getItem('user').then(user => {
       if (user) {
@@ -153,7 +163,6 @@ export function HomeScreen() {
           )
           .then(function () {
             setLoading(false);
-            // setData(response.data.data);
             // console.log(response.data.data);
           })
           .catch(function () {
@@ -172,7 +181,7 @@ export function HomeScreen() {
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-      console.log('Authorization status:', authStatus);
+      // console.log('Authorization status:', authStatus);
       saveUserDeviceToken(deviceToken);
     }
   }
@@ -214,7 +223,7 @@ export function HomeScreen() {
     return <Visitor item={item} style={{backgroundColor}} />;
   };
   const messageBoard = ({item}) => {
-    console.log('message baord', item);
+    // console.log('message baord', item);
     const backgroundColor = '#04141A';
     return <Board item={item} style={{backgroundColor}} />;
   };
@@ -392,6 +401,9 @@ export function HomeScreen() {
                   <Text style={styles.paymentText}>{data.issue.issue}</Text>
                 </View>
               </View>
+
+
+
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => navigation.navigate('Issue')}>

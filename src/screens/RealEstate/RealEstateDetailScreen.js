@@ -225,7 +225,7 @@ export function RealEstateDetailScreen({route, navigation}) {
       <View style={styles.actionButtons}>
         <Icon
           size={20}
-          name="md-pencil"
+          name="pencil"
           style={styles.actionIcon}
           color="#999"
           onPress={() =>
@@ -349,7 +349,7 @@ export function RealEstateDetailScreen({route, navigation}) {
     <SafeAreaView style={styles.container} keyboardShouldPersistTaps="handled">
       <ScrollView keyboardShouldPersistTaps="handled" style={styles.mainView}>
         <View>{data && data !== '' && data !== null && header(data)}</View>
-        {console.log('Last Data', data)}
+        {/* {console.log('Last Data', data)} */}
 
         {data && data.id && data !== null && (
           <View style={styles.mainContent}>

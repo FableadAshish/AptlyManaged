@@ -116,7 +116,7 @@ export function AboutApartmentScreen({navigation}) {
     <AuthContainer>
       <ScrollView>
         <SafeAreaView style={styles.mainView}>
-          <Icon
+          {/* <Icon
             name="arrow-back"
             size={30}
             style={{
@@ -130,7 +130,7 @@ export function AboutApartmentScreen({navigation}) {
               paddingLeft: 20,
             }}
             onPress={() => navigation.goBack()}
-          />
+          /> */}
           <View style={styles.headerBG}>
             <Heading style={styles.titleText}>About {'\n'} Apartment</Heading>
             <Image

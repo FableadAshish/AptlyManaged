@@ -134,7 +134,7 @@ export function ParcelsScreen({navigation}) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         style={styles.mainView}>
-        <Icon
+        {/* <Icon
           name="arrow-back"
           size={30}
           style={{
@@ -148,7 +148,7 @@ export function ParcelsScreen({navigation}) {
             paddingLeft: 20,
           }}
           onPress={()=>navigation.goBack()}
-        />
+        /> */}
         <View style={styles.headerBG}>
           <Heading style={styles.titleText}>Parcels</Heading>
           <Image

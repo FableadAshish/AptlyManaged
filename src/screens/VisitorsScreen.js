@@ -212,7 +212,7 @@ export function VisitorsScreen({navigation}) {
   return (
     <AuthContainer>
       <SafeAreaView style={styles.mainView} keyboardShouldPersistTaps="handled">
-        <Icon
+        {/* <Icon
           name="arrow-back"
           size={30}
           style={{
@@ -227,7 +227,7 @@ export function VisitorsScreen({navigation}) {
           }}
           onPress={() => navigation.goBack()}
           // onPress={props.onClose}
-        />
+        /> */}
         <View style={styles.headerBG}>
           <Heading style={styles.titleText}>Visitors</Heading>
           <Image

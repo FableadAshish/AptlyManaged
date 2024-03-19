@@ -213,7 +213,7 @@ export function PollsScreen({navigation}) {
     <AuthContainer>
       <ScrollView>
         <SafeAreaView style={styles.mainView}>
-          <Icon
+          {/* <Icon
             name="arrow-back"
             size={30}
             style={{
@@ -227,7 +227,7 @@ export function PollsScreen({navigation}) {
               paddingLeft: 20,
             }}
             onPress={() => navigation.goBack()}
-          />
+          /> */}
           <View>
             <ImageBackground
               source={require('../../Image/poll.png')}

@@ -214,21 +214,6 @@ export function LoyaltyCardScreen({navigation}) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         style={styles.mainView}>
-           <Icon
-            name="arrow-back"
-            size={30}
-            style={{
-              // position: 'absolute',
-              // top: 35,
-              color: 'black',
-              // zIndex: 1000,
-              // left: 20,
-              paddingTop:50,
-              backgroundColor: Colors.primarColor,
-              paddingLeft: 20,
-            }}
-            onPress={()=>navigation.goBack()}
-          />
         <View style={styles.headerBG}>
           <Heading style={styles.titleText}>Loyalty Store</Heading>
           <Image

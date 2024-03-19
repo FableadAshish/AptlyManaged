@@ -34,13 +34,13 @@ import {Images} from '../../themes/Images';
 
 axios.interceptors.response.use(
   function (response) {
-    console.log('interceptor response', response);
+    // console.log('interceptor response', response);
     response.config.meta.responseTime =
       new Date().getTime() - response.config.meta.requestTimestamp;
     return response;
   },
   function (error) {
-    console.log('interceptor response error', error);
+    // console.log('interceptor response error', error);
     return Promise.reject(error);
   },
 );

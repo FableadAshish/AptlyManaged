@@ -251,7 +251,7 @@ export function ServiceScreen({navigation}) {
   return (
     <AuthContainer>
       <ScrollView keyboardShouldPersistTaps="handled" style={styles.mainView}>
-        <Icon
+        {/* <Icon
           name="arrow-back"
           size={30}
           style={{
@@ -265,7 +265,7 @@ export function ServiceScreen({navigation}) {
             paddingLeft: 20,
           }}
           onPress={() => navigation.goBack()}
-        />
+        /> */}
         <View style={styles.headerBG}>
           <Heading style={styles.titleText}>Services</Heading>
           <Image

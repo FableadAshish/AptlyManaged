@@ -137,14 +137,15 @@ class AddPropertyStep2Screen extends Component {
               </View>
             </View>
             <View style={styles.formItem}>
-              <Text style={styles.labelText}>Contact Mail</Text>
+              <Text style={styles.labelText}>Contact rfw</Text>
               <TextInput
-                style={styles.input}
-                onChangeText={text => this.setState({text})}
-                value={this.state.text}
-                placeholder={'eq. xyz@email.com'}
-                placeholderTextColor="#000"
-              />
+    style={styles.input}
+    onChangeText={text => this.setState({text: text.toLowerCase()})}
+    value={this.state.text}
+    placeholder={'eq. xyz@email.com'}
+    placeholderTextColor="#000"
+/>
+
             </View>
             <View style={styles.formItem}>
               <Text style={styles.labelText}>Phone Number</Text>

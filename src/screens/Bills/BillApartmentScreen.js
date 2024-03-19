@@ -229,7 +229,7 @@ export function BillApartmentScreen({navigation}) {
     <AuthContainer>
       <ScrollView>
         <SafeAreaView style={styles.mainView}>
-          <Icon
+          {/* <Icon
             name="arrow-back"
             size={30}
             style={{
@@ -243,7 +243,7 @@ export function BillApartmentScreen({navigation}) {
               paddingLeft: 20,
             }}
             onPress={() => navigation.goBack()}
-          />
+          /> */}
           <View style={styles.headerBG}>
             <Heading style={styles.titleText}>Bills & Accounts</Heading>
             <Image source={Images.Apartment} style={styles.headerImage} />

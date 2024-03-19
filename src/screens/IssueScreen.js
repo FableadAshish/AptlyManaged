@@ -183,7 +183,7 @@ export function IssueScreen({ navigation }) {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         } style={styles.mainView}>
-       <Icon
+       {/* <Icon
             name="arrow-back"
             size={30}
             style={{
@@ -197,7 +197,7 @@ export function IssueScreen({ navigation }) {
               paddingLeft: 20,
             }}
             onPress={() => navigation.goBack()}
-          />
+          /> */}
           <View style={styles.headerBG} >
             <Heading style={styles.titleText}>Reported Issues</Heading>
             <Image source={require('../../Image/report.png')} style={styles.headerImage} />

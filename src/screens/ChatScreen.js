@@ -77,7 +77,7 @@ export function ChatScreen({ navigation, route }) {
     message: yup.string().required('Message is Required'),
   });
   const scrollViewRef = useRef();
-  console.log('route.params;', route.params);
+  // console.log('route.params;', route.params);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getServices();
@@ -95,7 +95,7 @@ export function ChatScreen({ navigation, route }) {
       message: issue.message,
       creationTime: new Date().getTime() / 1000,
     };
-    console.log('chat submit', data);
+    // console.log('chat submit', data);
     axios
       .post(`${BASE_URL}/send-message`, data, {
         headers: {
@@ -104,7 +104,7 @@ export function ChatScreen({ navigation, route }) {
       })
       .then(function (response) {
         setLoading(false);
-        console.log(response);
+        // console.log(response);
         getServices();
         setVisible(false);
       })
@@ -112,13 +112,15 @@ export function ChatScreen({ navigation, route }) {
         setLoading(false);
         setError(e.response.data.msg);
         setLoading(false);
-        console.log(e.response.data);
+        // console.log(e.response.data);
       });
   }
 
   function getServices() {
     setRefreshing(false);
     setLoading(true);
+    const getLiveMessages = setInterval(()=>{
+
     SecureStorage.getItem('user').then(user => {
       if (user) {
         const userDetails = JSON.parse(user);
@@ -140,61 +142,66 @@ export function ChatScreen({ navigation, route }) {
           .then(function (response) {
             setLoading(false);
             setData(response.data.data.data);
-            console.log(response.data.data.data);
+            // console.log(response.data.data.data);
           })
           .catch(function (error) {
             setLoading(false);
-            console.log(error.response.data);
+            // console.log(error.response.data);
           });
       }
     });
+  }, 5000)
+  return () => clearInterval(getLiveMessages)
   }
 
   function getMoreData() {
     setLoadMore(true);
-    SecureStorage.getItem('user').then(user => {
-      if (user) {
-        const userDetails = JSON.parse(user);
-        setAppUser(userDetails.details);
-        axios
-          .post(
-            `${BASE_URL}/get-chat`,
-            {
-              company_id: userDetails.details.company_id,
-              sender_id: userDetails.details.id,
-              receiver_id: selectedFeed.id,
-              page: pageNumber,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
+    const getLiveMessages = setInterval(()=>{
+      SecureStorage.getItem('user').then(user => {
+        if (user) {
+          const userDetails = JSON.parse(user);
+          setAppUser(userDetails.details);
+          axios
+            .post(
+              `${BASE_URL}/get-chat`,
+              {
+                company_id: userDetails.details.company_id,
+                sender_id: userDetails.details.id,
+                receiver_id: selectedFeed.id,
+                page: pageNumber,
               },
-            },
-          )
-          .then(async function (response) {
-            console.log('response', response);
-            setLoading(false);
-            setLoadMore(false);
-            setData([...data, ...response.data.data.data]);
-            console.log(response.data.data.data);
-            console.log(data);
-            if (
-              response.data.data.last_page > response.data.data.current_page
-            ) {
-              setPageNumber(
-                parseInt(response.data.data.current_page) + parseInt(1),
-              );
-              setIsLoadMore(true);
-            } else {
-              setIsLoadMore(false);
-            }
-          })
-          .catch(function (error) {
-            setLoading(false);
-            console.log(error.response.data);
-          });
-      }
-    });
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              },
+            )
+            .then(async function (response) {
+              // console.log('response', response);
+              setLoading(false);
+              setLoadMore(false);
+              setData([...data, ...response.data.data.data]);
+              // console.log(response.data.data.data);
+              // console.log(data);
+              if (
+                response.data.data.last_page > response.data.data.current_page
+              ) {
+                setPageNumber(
+                  parseInt(response.data.data.current_page) + parseInt(1),
+                );
+                setIsLoadMore(true);
+              } else {
+                setIsLoadMore(false);
+              }
+            })
+            .catch(function (error) {
+              setLoading(false);
+              // console.log(error.response.data);
+            });
+        }
+      });
+    }, 5000)
+    return () => clearInterval(getLiveMessages)
   }
 
   const Indepth = ({item, onPress, style}) => {
@@ -269,7 +276,7 @@ export function ChatScreen({ navigation, route }) {
       [
         {
           text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
+          // onPress: () => console.log('Cancel Pressed'),
           style: 'cancel',
         },
         {text: 'Delete', onPress: () => deleteFeed(feed_id)},
@@ -293,19 +300,19 @@ export function ChatScreen({ navigation, route }) {
       )
       .then(response => {
         setLoading(false);
-        console.log(response);
+        // console.log(response);
         getServices();
         setVisible(false);
       })
       .catch(e => {
         setLoading(false);
         setError(e.response.data.msg);
-        console.log(e.response.data);
+        // console.log(e.response.data);
       });
   };
 
   const onDelete = id => {
-    console.log('onload', id);
+    // console.log('onload', id);
     //deleteFeedAlert(id);
   };
 
@@ -315,7 +322,7 @@ export function ChatScreen({ navigation, route }) {
         {/* <ScrollView style={styles.chatContainer} ref={scrollViewRef}
             onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}>
              */}
-        <Icon
+        {/* <Icon
           name="arrow-back"
           size={30}
           style={{
@@ -329,7 +336,7 @@ export function ChatScreen({ navigation, route }) {
             paddingLeft: 20,
           }}
           onPress={() => navigation.goBack()}
-        />
+        /> */}
         <View>
           <ImageBackground
             source={require('../../Image/chat.png')}

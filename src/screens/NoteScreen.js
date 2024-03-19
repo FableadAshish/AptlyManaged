@@ -276,7 +276,7 @@ export function NoteScreen({navigation}) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         style={styles.mainView}>
-        <Icon
+        {/* <Icon
           name="arrow-back"
           size={30}
           style={{
@@ -290,7 +290,7 @@ export function NoteScreen({navigation}) {
             paddingLeft: 20,
           }}
           onPress={() => navigation.goBack()}
-        />
+        /> */}
         <View style={styles.headerBG}>
           <Heading style={styles.titleText}>Home Notes</Heading>
           <Image

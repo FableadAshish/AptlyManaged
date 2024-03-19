@@ -48,7 +48,7 @@ export function PrivacyPolicyScreen({navigation}) {
                     flexDirection: 'row',
                     alignItems: 'center',
                   }}>
-                  <Icon name="chevron-left" size={25} />
+                  {/* <Icon name="chevron-left" size={25} /> */}
                   {/* <Text style={{fontWeight: 'bold'}}>Back</Text> */}
                 </TouchableOpacity>
                 <Heading style={styles.titleText}>Privacy Policy</Heading>
@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     position: 'absolute',
-    top: 50,
+    top: 25,
     left: 0,
     color: '#000',
     fontSize: 22,

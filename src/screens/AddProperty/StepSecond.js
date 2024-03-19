@@ -132,7 +132,7 @@ class AddPropertyStep2Screen extends Component {
 
     const errors = {...this.state.errors};
     errors.email = undefined;
-    this.setState({email: text, errors});
+    this.setState({email: text.toLowerCase(), errors});
   };
 
   onChangePhone = text => {

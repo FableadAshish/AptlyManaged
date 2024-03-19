@@ -68,7 +68,7 @@ export function AdvertiseScreen({ navigation }) {
           )
           .then(function (response) {
             setLoading(false);
-            console.log(response.data.data.data);
+            console.log("This is Advertsisging Data", response.data.data.data);
             setData(response.data.data.data);
             if (
               response.data.data.last_page > response.data.data.current_page
@@ -110,7 +110,7 @@ export function AdvertiseScreen({ navigation }) {
             setLoading(false);
             setLoadMore(false);
             setData([...data, ...response.data.data.data]);
-            console.log(response.data.data.data);
+            console.log("This is Advertsisging datakropfk", response.data.data.data);
             console.log(data);
             if (
               response.data.data.last_page > response.data.data.current_page

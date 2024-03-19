@@ -116,7 +116,7 @@ export function ChangePasswordScreen({navigation}) {
           <SafeAreaView style={styles.mainView}>
             <View style={styles.container}>
               <KeyboardAvoidingView enabled>
-                <Icon
+                {/* <Icon
                   name="arrow-back"
                   size={30}
                   style={{
@@ -127,7 +127,7 @@ export function ChangePasswordScreen({navigation}) {
                     left: 20,
                   }}
                   // onPress={(props.onClose)}
-                />
+                /> */}
                 <Image source={Images.ChangeIcon} style={styles.headerImage} />
                 <Heading style={styles.heading}>Change Password</Heading>
                 <Text style={styles.titleCaptionStyle}>

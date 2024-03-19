@@ -251,7 +251,7 @@ export function MyPropertyListingScreen({ navigation, route }) {
           style={styles.container}
           keyboardShouldPersistTaps="handled">
           <View>
-          <Icon
+          {/* <Icon
             name="arrow-back"
             size={30}
             style={{
@@ -265,7 +265,7 @@ export function MyPropertyListingScreen({ navigation, route }) {
               paddingLeft: 20,
             }}
             onPress={()=>navigation.goBack()}
-          />
+          /> */}
             <KeyboardAvoidingView enabled>
               <ImageBackground
                 source={require('../../Image/real-estateDetail-banner.png')}

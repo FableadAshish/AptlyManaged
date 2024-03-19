@@ -15,7 +15,7 @@ export const ClubsScreen = () => {
   return (
     <View style={{height: '100%'}}>
       <View>
-        <Icon
+        {/* <Icon
           name="arrow-back"
           size={30}
           style={{
@@ -29,7 +29,7 @@ export const ClubsScreen = () => {
             paddingLeft: 20,
           }}
           onPress={() => navigation.goBack()}
-        />
+        /> */}
         <ImageBackground
           source={require('../../Image/plain-background.png')}
           style={styles.headerBG}>

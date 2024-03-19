@@ -294,7 +294,7 @@ class UpdateDetailScreen extends Component {
           <ScrollView
             keyboardShouldPersistTaps="handled"
             style={styles.mainView}>
-            <Icon
+            {/* <Icon
               name="arrow-back"
               size={30}
               style={{
@@ -308,7 +308,7 @@ class UpdateDetailScreen extends Component {
                 paddingLeft: 20,
               }}
               onPress={() => this.props.navigation.goBack()}
-            />
+            /> */}
             <View style={styles.container}>
               <Text style={styles.lableInput}>First Name</Text>
               <View style={styles.SectionStyle}>

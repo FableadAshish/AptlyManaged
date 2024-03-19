@@ -436,10 +436,10 @@ const styles = StyleSheet.create({
     color: '#999',
   },
   headerBG: {
-    // position: 'absolute',
+    position: 'relative',
     height: 185,
     width: '100%',
-    top: 0,
+    // top: 0,
   },
   backicon: {
     position: 'absolute',

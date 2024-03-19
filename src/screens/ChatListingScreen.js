@@ -102,43 +102,47 @@ export function ChatListingScreen({navigation}) {
   function getServices() {
     setRefreshing(false);
     setLoading(true);
-    SecureStorage.getItem('user').then(user => {
-      if (user) {
-        const userDetails = JSON.parse(user);
-        setAppUser(userDetails.details);
-        var data = {
-          company_id: userDetails.details.company_id,
-          user_id: userDetails.details.id,
-        };
-        console.log('comsdf', data);
-        axios
-          .post(
-            `${BASE_URL}/listing-chat`,
-            {
-              company_id: userDetails.details.company_id,
-              user_id: userDetails.details.id,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
+    // const loadData = setInterval(()=>{
+      SecureStorage.getItem('user').then(user => {
+        if (user) {
+          const userDetails = JSON.parse(user);
+          setAppUser(userDetails.details);
+          var data = {
+            company_id: userDetails.details.company_id,
+            user_id: userDetails.details.id,
+          };
+          console.log('comsdf', data);
+          axios
+            .post(
+              `${BASE_URL}/listing-chat`,
+              {
+                company_id: userDetails.details.company_id,
+                user_id: userDetails.details.id,
               },
-            },
-          )
-          .then(function (response) {
-            setLoading(false);
-            setData(response.data.data);
-            console.log('CheckData', response.data.data);
-          })
-          .catch(function (error) {
-            setLoading(false);
-            console.log('chat', error.response.data);
-          });
-      }
-    });
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              },
+            )
+            .then(function (response) {
+              setLoading(false);
+              setData(response.data.data);
+              console.log('CheckData', response.data.data);
+            })
+            .catch(function (error) {
+              setLoading(false);
+              console.log('chat', error.response.data);
+            });
+        }
+      });
+    // }, 5000)
+    // return () => clearInterval(loadData);
   }
 
   function getMoreData() {
     setLoadMore(true);
+    // const loadData = setInterval(()=>{
     SecureStorage.getItem('user').then(user => {
       if (user) {
         const userDetails = JSON.parse(user);
@@ -180,6 +184,8 @@ export function ChatListingScreen({navigation}) {
           });
       }
     });
+  // }, 4000)
+  // return () => clearInterval(loadData);
   }
   const config = {
     velocityThreshold: 0.3,
@@ -231,6 +237,7 @@ export function ChatListingScreen({navigation}) {
           </View>
 
           <View style={styles.rightContent}>
+            
             {item.unReadCount > 0 && (
               <View style={styles.unread}>
                 <Text style={{color: '#fff', fontWeight: 'bold'}}>
@@ -320,7 +327,7 @@ export function ChatListingScreen({navigation}) {
     <AuthContainer style={{flex: 1}}>
       <View style={{flex: 1, flexDirection: 'column'}}>
         <View style={styles.mainView}>
-          <Icon
+          {/* <Icon
             name="arrow-back"
             size={30}
             style={{
@@ -334,7 +341,7 @@ export function ChatListingScreen({navigation}) {
               paddingLeft: 20,
             }}
             onPress={()=>navigation.goBack()}
-          />
+          /> */}
           <View>
             <ImageBackground
               source={require('../../Image/chat.png')}
