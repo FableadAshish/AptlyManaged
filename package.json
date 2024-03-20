@@ -54,6 +54,7 @@
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-textarea": "^1.0.4",
     "react-native-vector-icons": "^10.0.3",
+    "react-native-webview": "^13.8.1",
     "react-step-builder": "^3.0.6",
     "redis-server": "^1.2.2",
     "socket.io-client": "^4.7.5",
