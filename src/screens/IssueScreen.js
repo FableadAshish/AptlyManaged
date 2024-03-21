@@ -9,7 +9,12 @@ import {
   Image,
   RefreshControl,
   StatusBar,
-  ScrollView, KeyboardAvoidingView
+  ScrollView, KeyboardAvoidingView,
+  Modal,
+  TouchableOpacity,
+  TouchableNativeFeedback,
+  Pressable,
+  TouchableWithoutFeedback
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
 import { ThemeContext } from '../contexts/ThemeContext';
@@ -24,15 +29,6 @@ import { BASE_URL } from '../config';
 import { Loading } from '../components/Loading';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Moment from 'moment';
-import {
-  FAB,
-  Modal,
-  Portal,
-  Text as PapaerText,
-  TextInput,
-  Button,
-  Provider,
-} from 'react-native-paper';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { EmergencyAlarmModal } from '../components/EmergencyAlarmModal';
@@ -48,8 +44,8 @@ export function IssueScreen({ navigation }) {
   const [appUser, setAppUser] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
-  const [visible, setVisible] = React.useState(false);
-  const showModal = () => setVisible(true);
+  const [isVisible, setIsVisible] = React.useState(false);
+  const showModal = () => setIsVisible(true);
   const hideModal = () => setVisible(false);
   const containerStyle = {
     backgroundColor: '#FFF',
@@ -137,7 +133,7 @@ export function IssueScreen({ navigation }) {
           .then(function (response) {
             setLoading(false);
             setData(response.data.data.data);
-            console.log("response.data.data.data",response.data.data.data);
+            console.log("response.data.data.data", response.data.data.data);
           })
           .catch(function (error) {
             setLoading(false);
@@ -151,17 +147,17 @@ export function IssueScreen({ navigation }) {
     <View style={[styles.item, style]}>
       <View style={styles.leftView}>
         <Text style={styles.name}>{item.issue}</Text>
-      {
-        item.comment &&
-        <Text style={[styles.dateTime,{marginBottom:5}]}>{item.comment}</Text>
-      }  
+        {
+          item.comment &&
+          <Text style={[styles.dateTime, { marginBottom: 5 }]}>{item.comment}</Text>
+        }
         <Text style={styles.dateTime}>
           <Icon name="time-outline" style={styles.iconSize} />{' '}
           Created: {Moment(item.created_at).format('Do MMM, yyyy H:mm ')}{' '}
         </Text>
         <Text style={styles.dateTime}>
           {item.status == 1 && <Text><Icon name="time-outline" style={styles.iconSize} />{' '}
-          Completed: {Moment(item.updated_at).format('Do MMM, yyyy H:mm ')}</Text>}
+            Completed: {Moment(item.updated_at).format('Do MMM, yyyy H:mm ')}</Text>}
         </Text>
       </View>
       <View style={styles.rightView}>
@@ -183,7 +179,7 @@ export function IssueScreen({ navigation }) {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         } style={styles.mainView}>
-       {/* <Icon
+        {/* <Icon
             name="arrow-back"
             size={30}
             style={{
@@ -198,29 +194,29 @@ export function IssueScreen({ navigation }) {
             }}
             onPress={() => navigation.goBack()}
           /> */}
-          <View style={styles.headerBG} >
-            <Heading style={styles.titleText}>Reported Issues</Heading>
-            <Image source={require('../../Image/report.png')} style={styles.headerImage} />
-          </View>
-          <View style={styles.roudedLayout}>
-            <SafeAreaView style={styles.container}>
-              <View style={styles.listWrap}>
-                {data && (
-                  <FlatList
-                    data={data}
-                    renderItem={services}
-                    keyExtractor={(item) => 'ses' + item.id}
-                  />
-                )}
-              </View>
-            </SafeAreaView>
-          </View>
-          {/* <TouchableOpacity activeOpacity={0.8} style={styles.buttonStyle}>
+        <View style={styles.headerBG} >
+          <Heading style={styles.titleText}>Reported Issues</Heading>
+          <Image source={require('../../Image/report.png')} style={styles.headerImage} />
+        </View>
+        <View style={styles.roudedLayout}>
+          <SafeAreaView style={styles.container}>
+            <View style={styles.listWrap}>
+              {data && (
+                <FlatList
+                  data={data}
+                  renderItem={services}
+                  keyExtractor={(item) => 'ses' + item.id}
+                />
+              )}
+            </View>
+          </SafeAreaView>
+        </View>
+        {/* <TouchableOpacity activeOpacity={0.8} style={styles.buttonStyle}>
             <Text style={styles.buttonTextStyle}>+</Text>
           </TouchableOpacity> */}
-    
+
       </ScrollView>
-      <Provider>
+      {/* <Provider>
         <Portal>
           <Modal
             visible={visible}
@@ -264,15 +260,75 @@ export function IssueScreen({ navigation }) {
 
           </Modal>
         </Portal>
-      </Provider>
+      </Provider> */}
+      <View style={styles.centeredView}>
+        <Modal transparent={true} visible={isVisible} animationType="fade" onRequestClose={() => setIsVisible(false)}>
+          <Pressable onPressOut={()=>setIsVisible(false)} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <Formik
+              validationSchema={validationSchema}
+              initialValues={{ issue: '' }}
+              onSubmit={(values) => {
+                sendIssue(values.issue);
+                setIsVisible(false);
+              }}>
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                isValid,
+              }) => (
+                <ScrollView style={{
+                  backgroundColor: '#FFF',
+                  paddingTop: 40,
+                  padding: 10,
+                  marginHorizontal: 15,
+                  borderRadius: 30,
+                  borderColor: '#FFF',
+                  borderWidth: 2.5,
+                  width: 300,
+                  marginTop: 200,
+                  marginBottom: 350
+                  // height:300
+                }}>
+                  <TouchableWithoutFeedback>
+                    <View>
+
+                    <Text style={styles.lableInput}>Raise Issue</Text>
+                    <View style={styles.SectionStyle}>
+                      <Input
+                        name="issue"
+                        placeholder="Enter issue"
+                        style={styles.textInput}
+                        onChangeText={handleChange('issue')}
+                        onBlur={handleBlur('issue')}
+                        value={values.issue}
+                        keyboardType="default"
+                      />
+                    </View>
+                    {errors.issue && (
+                      <Text style={styles.errorTextStyle}>{errors.issue}</Text>
+                    )}
+                    <Error error={error} />
+                    <FilledButton style={styles.submitButton} title={'Send Issue'} onPress={handleSubmit} />
+                    </View>
+
+                  </TouchableWithoutFeedback>
+                </ScrollView>
+              )}
+            </Formik>
+          </Pressable>
+        </Modal>
+      </View>
       <EmergencyAlarmModal setLoading={setLoading} />
       <Loading loading={loading} />
-      <FAB
-        style={styles.fab}
-        icon="plus"
-        theme={{ colors: { accent: 'white' } }}
-        onPress={showModal}
-      />
+      <TouchableOpacity
+        onPress={() => setIsVisible(true)}
+        style={styles.openButton}>
+        {/* <Text style={styles.textStyle}>Open</Text> */}
+        <Icon name={'add'} size={25} />
+      </TouchableOpacity>
     </AuthContainer>
   );
 }
@@ -333,7 +389,7 @@ const styles = StyleSheet.create({
   },
   rightView: {
     // width: 80,
-   
+
     textAlign: 'right',
   },
   statusOpen: {
@@ -421,5 +477,60 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: '',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'red',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  openButton: {
+    position: 'absolute',
+    bottom: 50,
+    width: 50,
+    height: 50,
+    right: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    backgroundColor: 'white',
+    borderRadius: 50,
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 4
   },
 });

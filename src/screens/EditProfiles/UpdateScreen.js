@@ -314,7 +314,7 @@ class UpdateDetailScreen extends Component {
               <View style={styles.SectionStyle}>
                 <InputBox
                   onChangeText={text => this.handleChange(text, 'first_name')}
-                  // value={this.state.first_name}
+                  value={this.state.first_name}
                   placeholder={'First Name'}
                   style={styles.textInput}
                 />
@@ -346,9 +346,9 @@ class UpdateDetailScreen extends Component {
               <Text style={styles.lableInput}>Email Address</Text>
               <View style={styles.SectionStyle}>
                 <InputBox
-                  // editable={true}
+                  editable={false}
                   onChangeText={text => this.handleChange(text, 'email')}
-                  // value={this.state.email}
+                  value={this.state.email}
                   placeholder={'Email Address'}
                   style={styles.textInput}
                 />

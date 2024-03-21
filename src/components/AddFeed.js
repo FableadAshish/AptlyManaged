@@ -244,7 +244,8 @@ const AddFeed = props => {
       </View>
       <Modal animationType="fade" visible={isModalVisible} transparent={true}>
         <View style={styles.modalOverlay}>
-          <View
+          <Pressable
+          onPressOut={()=>setIsModalVisible(!isModalVisible)}
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <View style={styles.modalContainer}>
               <View style={styles.content}>
@@ -276,7 +277,7 @@ const AddFeed = props => {
                 <Text>OK</Text>
               </Pressable>
             </View>
-          </View>
+          </Pressable>
         </View>
       </Modal>
     </>

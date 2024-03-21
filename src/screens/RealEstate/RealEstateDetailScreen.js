@@ -35,6 +35,7 @@ import {SliderBox} from '../../components/imageSlider';
 import Textarea from 'react-native-textarea';
 import {defaultPropertyImage} from '.././MyPropertyListingScreen';
 import {Images} from '../../themes/Images';
+import { AuthContainer } from '../../components/AuthContainer';
 
 export function RealEstateDetailScreen({route, navigation}) {
   const [error, setError] = React.useState('');
@@ -130,7 +131,7 @@ export function RealEstateDetailScreen({route, navigation}) {
         .post(
           `${BASE_URL}/detail-realEstate`,
           {
-            id: selectedFeed.id,
+            id: selectedFeed,
           },
           {
             headers: {
@@ -244,7 +245,7 @@ export function RealEstateDetailScreen({route, navigation}) {
   };
 
   const renderAgent = () => {
-    console.log('renderAgent', {selectedFeed, data});
+    console.log('renderAgent Again', {selectedFeed});
     if (!data.agent_id) {
       return;
     }
@@ -344,7 +345,7 @@ export function RealEstateDetailScreen({route, navigation}) {
   }
 
   return (
-    // <AuthContainer>
+    <AuthContainer>
 
     <SafeAreaView style={styles.container} keyboardShouldPersistTaps="handled">
       <ScrollView keyboardShouldPersistTaps="handled" style={styles.mainView}>
@@ -578,11 +579,14 @@ export function RealEstateDetailScreen({route, navigation}) {
         <Loading loading={loading || deleteLoading} />
       </ScrollView>
     </SafeAreaView>
-    // </AuthContainer>
+   </AuthContainer>
   );
 }
 
 const styles = StyleSheet.create({
+  textareaContainer:{
+    height: 'auto'
+  },
   mainBody: {
     justifyContent: 'center',
     backgroundColor: '#FFF',
@@ -791,4 +795,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
+  textInput:{
+    marginTop: 15
+  },
+  textarea:{
+    // backgroundColor: 'red',
+    height: 100
+  },
+  SectionStyle:{
+    marginBottom: 25
+  }
 });

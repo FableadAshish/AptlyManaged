@@ -41,7 +41,7 @@ import {defaultPropertyImage} from '../MyPropertyListingScreen';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import {Colors} from '../../themes/Colors';
 import {Images} from '../../themes/Images';
-import {styles} from './Styles/RealEstateScreenStyles';
+import styles from './Styles/RealEstateScreenStyles';
 
 axios.interceptors.response.use(
   function (response) {

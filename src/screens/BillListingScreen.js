@@ -16,16 +16,18 @@ import {
   ScrollView,
   RefreshControl,
   Dimensions,
-} from 'react-native';
-import {
-  FAB,
   Modal,
-  Portal,
-  Text as PapaerText,
-  TextInput,
-  Button,
-  Provider,
-} from 'react-native-paper';
+  TouchableWithoutFeedback,
+  Pressable
+} from 'react-native';
+// import {
+//   FAB,
+//   Portal,
+//   Text as PapaerText,
+//   TextInput,
+//   Button,
+//   Provider,
+// } from 'react-native-paper';
 import Picker from '../components/popupView/picker';
 import { Heading } from '../components/Heading';
 import { AuthContext } from '../contexts/AuthContext';
@@ -68,7 +70,7 @@ export function BillListingScreen({ navigation }) {
   const [showFilters, setShowFilters] = React.useState(false);
   const [isDateModel, setIsDateModel] = React.useState(false)
   const [filters, setFilters] = React.useState({});
-  const [visible, setVisible] = React.useState(false);
+  const [isVisible, setIsVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const containerStyle = {
@@ -273,7 +275,7 @@ export function BillListingScreen({ navigation }) {
 
         </View>
 
-        <TouchableOpacity style={{ alignItems: 'flex-end',position:'absolute',bottom:5,right:15 }} onPress={() => { deleteBill(item.id) }}>
+        <TouchableOpacity style={{ alignItems: 'flex-end', position: 'absolute', bottom: 5, right: 15 }} onPress={() => { deleteBill(item.id) }}>
           <Icon name="trash" size={18} />
         </TouchableOpacity>
       </View>
@@ -296,63 +298,65 @@ export function BillListingScreen({ navigation }) {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         } style={styles.mainView}>
-     
-          <View style={styles.headerBG} >
-            <Heading style={styles.titleText}>My Account</Heading>
-            <Image source={require('../../Image/report.png')} style={styles.headerImage} />
-          </View>
-          <View style={styles.roudedLayout}>
-            <SafeAreaView style={styles.container}>
-              <View style={styles.listWrap}>
-                {dataKeys.length
-                  ? dataKeys.map((key) => (
-                    <>
-                      <Text style={styles.headingText}>
-                        {data[key].formatdate}
-                      </Text>
 
-                      <View style={styles.listingWrap}>
-                        <FlatList
-                          data={data[key].items || []}
-                          renderItem={services}
-                          keyExtractor={(item) => 'ses' + item.id}
-                          initialNumToRender={10}
-                          onEndReachedThreshold={0.1}
-                          onEndReached={() => {
-                            if (isLoadMore) {
-                              getMoreData();
-                            }
-                          }}
-                          ListFooterComponent={renderFooter}
-                          refreshControl={
-                            <RefreshControl
-                              refreshing={refreshing}
-                              onRefresh={onRefresh}
-                            />
+        <View style={styles.headerBG} >
+          {/* <Heading style={styles.titleText}>My Account</Heading> */}
+          <Image source={require('../../Image/report.png')} style={styles.headerImage} />
+        </View>
+        <View style={styles.roudedLayout}>
+          <SafeAreaView style={styles.container}>
+            <View style={styles.listWrap}>
+              {dataKeys.length
+                ? dataKeys.map((key) => (
+                  <>
+                    <Text style={styles.headingText}>
+                      {data[key].formatdate}
+                    </Text>
+
+                    <View style={styles.listingWrap}>
+                      <FlatList
+                        data={data[key].items || []}
+                        renderItem={services}
+                        keyExtractor={(item) => 'ses' + item.id}
+                        initialNumToRender={10}
+                        onEndReachedThreshold={0.1}
+                        onEndReached={() => {
+                          if (isLoadMore) {
+                            getMoreData();
                           }
-                        />
-                      </View>
-                    </>
-                  ))
-                  : <Text style={{ textAlign: 'center' }}>Not Found</Text>}
-              </View>
-            </SafeAreaView>
-          </View>
-          <EmergencyAlarmModal setLoading={setLoading} />
-          <Loading loading={loading} />
-        
+                        }}
+                        ListFooterComponent={renderFooter}
+                        refreshControl={
+                          <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                          />
+                        }
+                      />
+                    </View>
+                  </>
+                ))
+                : <Text style={{ textAlign: 'center' }}>Not Found</Text>}
+            </View>
+          </SafeAreaView>
+        </View>
+        <EmergencyAlarmModal setLoading={setLoading} />
+        <Loading loading={loading} />
+
       </ScrollView>
-      <Provider>
-        <Portal>
-          <Modal
-            visible={visible}
-            onDismiss={hideModal}
-            contentContainerStyle={containerStyle} style={styles.modal}>
-            <Formik
+      <View style={styles.centeredView}>
+        <Modal transparent={true} visible={isVisible} animationType="fade" onRequestClose={() => setIsVisible(false)}>
+          <Pressable onPress={()=>setIsVisible(false)} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            {/* <Formik
               validationSchema={validationSchema}
-              initialValues={{ bill_category: '', title: '', payment_date: '', bill_amount: '' }}
-              onSubmit={(values) => {
+              initialValues={{
+                title: '',
+                sub_title: '',
+                description: '',
+              }}
+              onSubmit={values => {
                 sendIssue(values);
+                setIsVisible(false);
               }}>
               {({
                 handleChange,
@@ -362,98 +366,202 @@ export function BillListingScreen({ navigation }) {
                 errors,
                 isValid,
               }) => (
-                <KeyboardAwareScrollView
-                  keyboardShouldPersistTaps="handled"
-                  showsVerticalScrollIndicator={false}>
-                  <Text style={styles.lableInput}>Add Bill Form</Text>
-                  <View style={styles.dropdownContainer}>
-                    <Picker
-                      style={{ color: '#000', }}
-                      contentContainerStyle={{
-                        borderBottomWidth: 1,
-                        backgroundColor: 'red',
-                        borderBottomColor: '#000'
-                      }}
-                      selectedValue={values.bill_category}
-                      onValueChange={handleChange('bill_category')}
-                      placeholder={'Bill Category'}
-                      data={[
-                        { label: 'Home Insurance', value: 'Home Insurance' },
-                        { label: 'Electricity Provider', value: 'Electricity Provider' },
-                        { label: 'Gas Provider', value: 'Gas Provider' },
-                        { label: 'Water', value: 'Water' },
-                        { label: 'Telephone', value: 'Telephone' },
-                        { label: 'Broadband', value: 'Broadband' },
-                        { label: 'Council Tax', value: 'Council Tax' },
-                        { label: 'TV License', value: 'TV License' },
-                        //  { label: 'Car Expenses', value: 'Car Expenses' },
-                        //  { label: 'Service Charge', value: 'Service Charge' },
-                        //  { label: 'Ground Rent', value: 'Ground Rent' },
-                        //  { label: 'Parking Fees', value: 'Parking Fees' },
-                        { label: 'Gym', value: 'Gym' },
-                      ]}
+                <View style={{ alignItems: 'center', justifyContent: 'center', width: 450 }}>
+                  <KeyboardAwareScrollView
+                    keyboardShouldPersistTaps="handled"
+                    viewIsInsideTabBar={false}
+                    showsVerticalScrollIndicator={false}
+                    resetScrollToCoords={{ x: 0, y: 0 }}
+                    contentContainerStyle={{
+                      backgroundColor: '#FFF',
+                      paddingTop: 40,
+                      padding: 10,
+                      marginHorizontal: 15,
+                      borderRadius: 30,
+                      borderColor: '#FFF',
+                      borderWidth: 2.5,
+                      width: 300
+                    }}
+                    scrollEnabled>
+                    <Text style={styles.lableInput}>Add Note</Text>
+                    <View style={styles.SectionStyle}>
+                      <Input
+                        name="title"
+                        placeholder="Enter Your Title"
+                        style={styles.textInput}
+                        onChangeText={handleChange('title')}
+                        onBlur={handleBlur('title')}
+                        value={values.title}
+                        keyboardType="default"
+                      />
+                    </View>
+                    {errors.title && (
+                      <Text style={styles.errorTextStyle}>{errors.title}</Text>
+                    )}
+                    <View style={styles.SectionStyle}>
+                      <Input
+                        name="sub_title"
+                        placeholder="Enter Sub Title"
+                        style={styles.textInput}
+                        onChangeText={handleChange('sub_title')}
+                        onBlur={handleBlur('sub_title')}
+                        value={values.sub_title}
+                        keyboardType="default"
+                      />
+                    </View>
+                    {errors.sub_title && (
+                      <Text style={styles.errorTextStyle}>
+                        {errors.sub_title}
+                      </Text>
+                    )}
+                    <View style={styles.SectionStyle}>
+                      <Input
+                        name="description"
+                        placeholder="Enter Note"
+                        style={styles.textInput}
+                        onChangeText={handleChange('description')}
+                        onBlur={handleBlur('description')}
+                        value={values.description}
+                        keyboardType="default"
+                      />
+                    </View>
+                    {errors.description && (
+                      <Text style={styles.errorTextStyle}>
+                        {errors.description}
+                      </Text>
+                    )}
+                    <Error error={error} />
+                    <FilledButton
+                      style={styles.submitButton}
+                      title={'Submit'}
+                      onPress={handleSubmit}
                     />
-                  </View>
-                  {errors.bill_category && (
-                    <Text style={styles.errorTextStyle}>{errors.bill_category}</Text>
-                  )}
-                  <View style={styles.inputContainer}>
-                    <Input
-                      name="title"
-                      placeholder="Title"
-                      style={styles.textInput}
-                      onChangeText={handleChange('title')}
-                      onBlur={handleBlur('title')}
-                      value={values.title}
-                      keyboardType="default"
-                    />
-                  </View>
-                  {errors.title && (
-                    <Text style={styles.errorTextStyle}>{errors.title}</Text>
-                  )}
-                  <View style={styles.inputContainer}>
+                  </KeyboardAwareScrollView>
 
-                    <TouchableOpacity
-                      onPress={() => {
-                        setIsDateModel(true)
-                      }}
-                    >
-                      <View style={[styles.inputContainer, { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#000', paddingVertical: 5 }]}>
-                        <Text >{Moment(date).format('MM/DD/YYYY')}</Text>
-                        <View style={{ position: 'absolute', right: 10 }}>
-                          <Icon name="calendar-outline" size={24} />
+                </View>
+              )}
+            </Formik> */}
+
+            <Formik
+              validationSchema={validationSchema}
+              initialValues={{ bill_category: '', title: '', payment_date: '', bill_amount: '' }}
+              onSubmit={(values) => {
+                sendIssue(values);
+                setIsVisible(false);
+              }}>
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                isValid,
+              }) => (
+                <TouchableWithoutFeedback>
+
+                <View style={{  backgroundColor: '#FFF',
+                paddingTop: 40,
+                padding: 10,
+                marginHorizontal: 15,
+                borderRadius: 30,
+                borderColor: '#FFF',
+                borderWidth: 2.5,
+                width: 300}}>
+
+                  <KeyboardAwareScrollView
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}>
+                    <Text style={styles.lableInput}>Add Bill Form</Text>
+                    <View style={styles.dropdownContainer}>
+                      <Picker
+                        style={{ color: '#000', }}
+                        contentContainerStyle={{
+                          borderBottomWidth: 1,
+                          backgroundColor: 'red',
+                          borderBottomColor: '#000'
+                        }}
+                        selectedValue={values.bill_category}
+                        onValueChange={handleChange('bill_category')}
+                        placeholder={'Bill Category'}
+                        data={[
+                          { label: 'Home Insurance', value: 'Home Insurance' },
+                          { label: 'Electricity Provider', value: 'Electricity Provider' },
+                          { label: 'Gas Provider', value: 'Gas Provider' },
+                          { label: 'Water', value: 'Water' },
+                          { label: 'Telephone', value: 'Telephone' },
+                          { label: 'Broadband', value: 'Broadband' },
+                          { label: 'Council Tax', value: 'Council Tax' },
+                          { label: 'TV License', value: 'TV License' },
+                          //  { label: 'Car Expenses', value: 'Car Expenses' },
+                          //  { label: 'Service Charge', value: 'Service Charge' },
+                          //  { label: 'Ground Rent', value: 'Ground Rent' },
+                          //  { label: 'Parking Fees', value: 'Parking Fees' },
+                          { label: 'Gym', value: 'Gym' },
+                        ]}
+                      />
+                    </View>
+                    {errors.bill_category && (
+                      <Text style={styles.errorTextStyle}>{errors.bill_category}</Text>
+                    )}
+                    <View style={styles.inputContainer}>
+                      <Input
+                        name="title"
+                        placeholder="Title"
+                        style={styles.textInput}
+                        onChangeText={handleChange('title')}
+                        onBlur={handleBlur('title')}
+                        value={values.title}
+                        keyboardType="default"
+                      />
+                    </View>
+                    {errors.title && (
+                      <Text style={styles.errorTextStyle}>{errors.title}</Text>
+                    )}
+                    <View style={styles.inputContainer}>
+
+                      <TouchableOpacity
+                        onPress={() => {
+                          setIsDateModel(true)
+                        }}
+                      >
+                        <View style={[styles.inputContainer, { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#000', paddingVertical: 5 }]}>
+                          <Text >{Moment(date).format('MM/DD/YYYY')}</Text>
+                          <View style={{ position: 'absolute', right: 10 }}>
+                            <Icon name="calendar-outline" size={24} />
+                          </View>
                         </View>
-                      </View>
-                    </TouchableOpacity>
+                      </TouchableOpacity>
 
 
-                  </View>
-                  {errors.payment_date && (
-                    <Text style={styles.errorTextStyle}>{errors.payment_date}</Text>
-                  )}
-                  <View style={styles.inputContainer}>
-                    <Input
-                      name="bill_amount"
-                      placeholder="Bill Amount"
-                      style={styles.textInput}
-                      onChangeText={handleChange('bill_amount')}
-                      onBlur={handleBlur('bill_amount')}
-                      value={values.bill_amount}
-                      keyboardType="default"
+                    </View>
+                    {errors.payment_date && (
+                      <Text style={styles.errorTextStyle}>{errors.payment_date}</Text>
+                    )}
+                    <View style={styles.inputContainer}>
+                      <Input
+                        name="bill_amount"
+                        placeholder="Bill Amount"
+                        style={styles.textInput}
+                        onChangeText={handleChange('bill_amount')}
+                        onBlur={handleBlur('bill_amount')}
+                        value={values.bill_amount}
+                        keyboardType="default"
 
-                    />
-                  </View>
-                  {errors.bill_amount && (
-                    <Text style={styles.errorTextStyle}>{errors.bill_amount}</Text>
-                  )}
-                  <Error error={error} />
-                  <FilledButton style={styles.submitButton} title={'Add Bill'} onPress={handleSubmit} />
-                </KeyboardAwareScrollView>
+                      />
+                    </View>
+                    {errors.bill_amount && (
+                      <Text style={styles.errorTextStyle}>{errors.bill_amount}</Text>
+                    )}
+                    <Error error={error} />
+                    <FilledButton style={styles.submitButton} title={'Add Bill'} onPress={handleSubmit} />
+                  </KeyboardAwareScrollView>
+                </View>
+                </TouchableWithoutFeedback>
               )}
             </Formik>
-          </Modal>
-        </Portal>
-      </Provider>
+          </Pressable>
+        </Modal>
+      </View>
       <Modal
         visible={isDateModel}
 
@@ -481,12 +589,12 @@ export function BillListingScreen({ navigation }) {
 
         </View>
       </Modal>
-      <FAB
-        style={styles.fab}
-        icon="plus"
-        theme={{ colors: { accent: 'white' } }}
-        onPress={showModal}
-      />
+      <TouchableOpacity
+        onPress={() => setIsVisible(true)}
+        style={styles.openButton}>
+        {/* <Text style={styles.textStyle}>Open</Text> */}
+        <Icon name={'add'} size={25} />
+      </TouchableOpacity>
     </AuthContainer>
   );
 }
@@ -503,7 +611,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 40,
     top: 5,
-    
+
     width: 122,
     height: 115,
   },
@@ -523,7 +631,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#EDB43C',
   },
   titleText: {
-    width:'100%',
+    width: '100%',
     position: 'absolute',
     top: 30,
     left: 0,
@@ -570,9 +678,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   rightView: {
-   paddingHorizontal:10,
+    paddingHorizontal: 10,
     flexDirection: 'row',
-    justifyContent:'flex-end'
+    justifyContent: 'flex-end'
   },
   deleteBtn: { position: 'absolute', bottom: 5, right: 15 },
   statusOpen: {
@@ -759,5 +867,60 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 20,
     fontWeight: '500',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: '',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'red',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  openButton: {
+    position: 'absolute',
+    bottom: 50,
+    width: 50,
+    height: 50,
+    right: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    backgroundColor: 'white',
+    borderRadius: 50,
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 4
   },
 });

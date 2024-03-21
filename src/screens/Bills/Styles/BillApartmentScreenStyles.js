@@ -309,4 +309,59 @@ export const styles = EStyleSheet.create({
     flex: 1,
     marginHorizontal: 10,
   },
+  modalView: {
+    margin: 20,
+    backgroundColor: '',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'red',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  openButton: {
+    position: 'absolute',
+    bottom: 50,
+    width: 50,
+    height: 50,
+    right: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    backgroundColor: 'white',
+    borderRadius: 50,
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 4
+  },
 });

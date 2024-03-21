@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, { useRef } from 'react';
 import axios from 'axios';
 import {
   SafeAreaView,
@@ -11,42 +11,47 @@ import {
   RefreshControl,
   StatusBar,
   ScrollView,
+  Modal,
+  Pressable,
+  TouchableOpacity,
+  TouchableNativeFeedback,
+  TouchableWithoutFeedback,
 } from 'react-native';
-import {AuthContext} from '../contexts/AuthContext';
-import {ThemeContext} from '../contexts/ThemeContext';
-import {AuthContainer} from '../components/AuthContainer';
-import {Heading} from '../components/Heading';
+import { AuthContext } from '../contexts/AuthContext';
+import { ThemeContext } from '../contexts/ThemeContext';
+import { AuthContainer } from '../components/AuthContainer';
+import { Heading } from '../components/Heading';
 
 import SecureStorage from 'react-native-secure-storage';
-import {UserContext} from '../contexts/UserContext';
-import {Input} from '../components/Input';
-import {FilledButton} from '../components/FilledButton';
-import {Error} from '../components/Error';
-import {BASE_URL} from '../config';
-import {Loading} from '../components/Loading';
+import { UserContext } from '../contexts/UserContext';
+import { Input } from '../components/Input';
+import { FilledButton } from '../components/FilledButton';
+import { Error } from '../components/Error';
+import { BASE_URL } from '../config';
+import { Loading } from '../components/Loading';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Moment from 'moment';
-import {
-  FAB,
-  Modal,
-  Portal,
-  TouchableOpacity,
-  Text as PapaerText,
-  TextInput,
-  Button,
-  Provider,
-} from 'react-native-paper';
-import {Formik} from 'formik';
+// import {
+//   FAB,
+//   Modal,
+//   Portal,
+//   TouchableOpacity,
+//   Text as PapaerText,
+//   TextInput,
+//   Button,
+//   Provider,
+// } from 'react-native-paper';
+import { Formik } from 'formik';
 import * as yup from 'yup';
-import {EmergencyAlarmModal} from '../components/EmergencyAlarmModal';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Colors} from '../themes/Colors';
+import { EmergencyAlarmModal } from '../components/EmergencyAlarmModal';
+import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Colors } from '../themes/Colors';
 
-export function NoteScreen({navigation}) {
-  const {logout} = React.useContext(AuthContext);
+export function NoteScreen({ navigation }) {
+  const { logout } = React.useContext(AuthContext);
   const switchTheme = React.useContext(ThemeContext);
-  const {token} = React.useContext(UserContext);
+  const { token } = React.useContext(UserContext);
   const [data, setData] = React.useState();
   const [appUser, setAppUser] = React.useState();
   const [loading, setLoading] = React.useState(false);
@@ -55,9 +60,11 @@ export function NoteScreen({navigation}) {
   const [isLoadMore, setIsLoadMore] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [pageNumber, setPageNumber] = React.useState(1);
+  const [isVisible, setIsVisible] = React.useState(false)
   const [visible, setVisible] = React.useState(false);
+
   const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
+  // const hideModal = () => setVisible(false);
   const containerStyle = {
     backgroundColor: '#FFF',
     padding: 30,
@@ -195,7 +202,7 @@ export function NoteScreen({navigation}) {
     navigation.navigate('Advertise');
   }
 
-  const Service = ({item, onPress, style}) => (
+  const Service = ({ item, onPress, style }) => (
     <View style={styles.noteView}>
       <View style={styles.noteHeading}>
         <Text style={styles.noteTitle}>{item.title}</Text>
@@ -217,7 +224,7 @@ export function NoteScreen({navigation}) {
     </View>
   );
 
-  const services = ({item}) => {
+  const services = ({ item }) => {
     return <Service item={item} style={styles.flatListBox} />;
   };
 
@@ -231,9 +238,9 @@ export function NoteScreen({navigation}) {
           onPress: () => console.log('Cancel Pressed'),
           style: 'cancel',
         },
-        {text: 'Delete', onPress: () => deleteFeed(feed_id)},
+        { text: 'Delete', onPress: () => deleteFeed(feed_id) },
       ],
-      {cancelable: false},
+      { cancelable: false },
     );
 
   const deleteFeed = feed_id => {
@@ -276,21 +283,6 @@ export function NoteScreen({navigation}) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         style={styles.mainView}>
-        {/* <Icon
-          name="arrow-back"
-          size={30}
-          style={{
-            // position: 'absolute',
-            // top: 35,
-            color: 'black',
-            // zIndex: 1000,
-            // left: 20,
-            paddingTop: 50,
-            backgroundColor: Colors.primarColor,
-            paddingLeft: 20,
-          }}
-          onPress={() => navigation.goBack()}
-        /> */}
         <View style={styles.headerBG}>
           <Heading style={styles.titleText}>Home Notes</Heading>
           <Image
@@ -299,14 +291,6 @@ export function NoteScreen({navigation}) {
           />
         </View>
         <View style={styles.roudedLayout}>
-          {/* <View style={styles.search}>
-                            <TextInput style = {styles.input}
-                              underlineColorAndroid='rgba(0,0,0,0)'
-                              placeholder = "Search..."
-                              placeholderTextColor = "#999"
-                              autoCapitalize = "none"
-                            />
-                        </View> */}
           <SafeAreaView style={styles.container}>
             <View style={styles.listWrap}>
               {data && (
@@ -335,22 +319,10 @@ export function NoteScreen({navigation}) {
             </View>
           </SafeAreaView>
         </View>
-        {/* <TouchableOpacity activeOpacity={0.8} style={styles.buttonStyle}>
-              <Text style={styles.buttonTextStyle}>+</Text>
-            </TouchableOpacity> */}
       </ScrollView>
-      <Provider>
-        <Portal>
-          <Modal
-            visible={visible}
-            onDismiss={hideModal}
-            contentContainerStyle={{
-              backgroundColor: '#FFF',
-              margin: 20,
-              borderRadius: 30,
-              borderColor: '#FFF',
-              borderWidth: 2.5,
-            }}>
+      <View style={styles.centeredView}>
+        <Modal transparent={true} visible={isVisible} animationType="fade" onRequestClose={() => setIsVisible(false)}>
+          <Pressable onPressOut={()=>setIsVisible(false)} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
             <Formik
               validationSchema={validationSchema}
               initialValues={{
@@ -360,6 +332,7 @@ export function NoteScreen({navigation}) {
               }}
               onSubmit={values => {
                 sendIssue(values);
+                setIsVisible(false);
               }}>
               {({
                 handleChange,
@@ -369,102 +342,98 @@ export function NoteScreen({navigation}) {
                 errors,
                 isValid,
               }) => (
-                <KeyboardAwareScrollView
-                  keyboardShouldPersistTaps="handled"
-                  viewIsInsideTabBar={false}
-                  showsVerticalScrollIndicator={false}
-                  resetScrollToCoords={{x: 0, y: 0}}
-                  contentContainerStyle={{
-                    backgroundColor: '#FFF',
+                  <TouchableWithoutFeedback>
+                <View style={{ alignItems: 'center', justifyContent: 'center', width: 450 }}>
+                  <KeyboardAwareScrollView
+                    keyboardShouldPersistTaps="handled"
+                    viewIsInsideTabBar={false}
+                    showsVerticalScrollIndicator={false}
+                    resetScrollToCoords={{ x: 0, y: 0 }}
+                    contentContainerStyle={{
+                      backgroundColor: '#FFF',
+                      paddingTop: 40,
+                      padding: 10,
+                      marginHorizontal: 15,
+                      borderRadius: 30,
+                      borderColor: '#FFF',
+                      borderWidth: 2.5,
+                      width: 300
+                    }}
+                    scrollEnabled>
+                    <Text style={styles.lableInput}>Add Note</Text>
+                    <View style={styles.SectionStyle}>
+                      <Input
+                        name="title"
+                        placeholder="Enter Your Title"
+                        style={styles.textInput}
+                        onChangeText={handleChange('title')}
+                        onBlur={handleBlur('title')}
+                        value={values.title}
+                        keyboardType="default"
+                      />
+                    </View>
+                    {errors.title && (
+                      <Text style={styles.errorTextStyle}>{errors.title}</Text>
+                    )}
+                    <View style={styles.SectionStyle}>
+                      <Input
+                        name="sub_title"
+                        placeholder="Enter Sub Title"
+                        style={styles.textInput}
+                        onChangeText={handleChange('sub_title')}
+                        onBlur={handleBlur('sub_title')}
+                        value={values.sub_title}
+                        keyboardType="default"
+                      />
+                    </View>
+                    {errors.sub_title && (
+                      <Text style={styles.errorTextStyle}>
+                        {errors.sub_title}
+                      </Text>
+                    )}
+                    <View style={styles.SectionStyle}>
+                      <Input
+                        name="description"
+                        placeholder="Enter Note"
+                        style={styles.textInput}
+                        onChangeText={handleChange('description')}
+                        onBlur={handleBlur('description')}
+                        value={values.description}
+                        keyboardType="default"
+                      />
+                    </View>
+                    {errors.description && (
+                      <Text style={styles.errorTextStyle}>
+                        {errors.description}
+                      </Text>
+                    )}
+                    <Error error={error} />
+                    <FilledButton
+                      style={styles.submitButton}
+                      title={'Submit'}
+                      onPress={handleSubmit}
+                    />
+                  </KeyboardAwareScrollView>
 
-                    paddingTop: 40,
-                    padding: 10,
-                    marginHorizontal: 15,
-                    borderRadius: 30,
-                    borderColor: '#FFF',
-                    borderWidth: 2.5,
-                  }}
-                  scrollEnabled>
-                  <Text style={styles.lableInput}>Add Note</Text>
-                  <View style={styles.SectionStyle}>
-                    <Input
-                      name="title"
-                      placeholder="Enter Your Title"
-                      style={styles.textInput}
-                      onChangeText={handleChange('title')}
-                      onBlur={handleBlur('title')}
-                      value={values.title}
-                      keyboardType="default"
-                    />
-                  </View>
-                  {errors.title && (
-                    <Text style={styles.errorTextStyle}>{errors.title}</Text>
-                  )}
-                  <View style={styles.SectionStyle}>
-                    <Input
-                      name="sub_title"
-                      placeholder="Enter Sub Title"
-                      style={styles.textInput}
-                      onChangeText={handleChange('sub_title')}
-                      onBlur={handleBlur('sub_title')}
-                      value={values.sub_title}
-                      keyboardType="default"
-                    />
-                  </View>
-                  {errors.sub_title && (
-                    <Text style={styles.errorTextStyle}>
-                      {errors.sub_title}
-                    </Text>
-                  )}
-                  <View style={styles.SectionStyle}>
-                    <Input
-                      name="description"
-                      placeholder="Enter Note"
-                      style={styles.textInput}
-                      onChangeText={handleChange('description')}
-                      onBlur={handleBlur('description')}
-                      value={values.description}
-                      keyboardType="default"
-                    />
-                    {/* <Input
-                                                multiline={true}
-                                                placeholder="Enter Note"
-                                                numberOfLines={10}
-                                                name="description"
-                                                placeholder="Enter Note"
-                                                style={styles.textInput}
-                                                onChangeText={handleChange('description')}
-                                                onBlur={handleBlur('description')}
-                                                value={values.description}
-                                                keyboardType="default"
-                                                style={{ height: 50 , width:270}}
-                                            /> */}
-                  </View>
-                  {errors.description && (
-                    <Text style={styles.errorTextStyle}>
-                      {errors.description}
-                    </Text>
-                  )}
-                  <Error error={error} />
-                  <FilledButton
-                    style={styles.submitButton}
-                    title={'Submit'}
-                    onPress={handleSubmit}
-                  />
-                </KeyboardAwareScrollView>
+
+                </View>
+                  </TouchableWithoutFeedback>
               )}
             </Formik>
-          </Modal>
-        </Portal>
-      </Provider>
+          </Pressable>
+        </Modal>
+      </View>
       <EmergencyAlarmModal setLoading={setLoading} />
       <Loading loading={loading} />
-      <FAB
-        style={styles.fab}
-        icon="plus"
-        theme={{colors: {accent: 'white'}}}
-        onPress={showModal}
-      />
+      {/* <View style={{ width: '100%', backgroundColor: 'red', alignItems:'flex-end', paddingLeft: 35 }}> */}
+
+      <TouchableOpacity
+        onPress={() => setIsVisible(true)}
+        style={styles.openButton}>
+        {/* <Text style={styles.textStyle}>Open</Text> */}
+        <Icon name={'add'} size={25} />
+      </TouchableOpacity>
+      {/* </View> */}
     </AuthContainer>
   );
 }
@@ -507,8 +476,9 @@ const styles = StyleSheet.create({
     // flexDirection: 'row',
   },
   listWrap: {
-    // flexDirection: 'row',
-    // width: '100%',
+    flexDirection: 'row',
+    width: '100%',
+    flex: 1
   },
   noteView: {
     // width: '50%',
@@ -640,4 +610,66 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
+  // centeredView: {
+  //   // flex: 1,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   marginTop: 22,
+  // },
+  modalView: {
+    margin: 20,
+    backgroundColor: '',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'red',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  openButton: {
+    position: 'absolute',
+    bottom: 50,
+    width: 50,
+    height: 50,
+    right: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    backgroundColor: 'white',
+    borderRadius: 50,
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 4
+  },
 });
+

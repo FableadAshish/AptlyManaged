@@ -201,7 +201,7 @@ export function MyPropertyListingScreen({ navigation, route }) {
       <View style={styles.actionButtons}>
         <Icon
           size={20}
-          name="md-pencil"
+          name="pencil"
           style={styles.actionIcon}
           color="#999"
           onPress={() => {

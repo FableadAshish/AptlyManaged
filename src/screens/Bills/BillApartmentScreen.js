@@ -13,46 +13,49 @@ import {
   RefreshControl,
   TouchableOpacity,
   ActivityIndicator,
-} from 'react-native';
-import {
-  FAB,
   Modal,
-  Portal,
-  Text as PapaerText,
-  TextInput,
-  Provider,
-} from 'react-native-paper';
-import {styles} from './Styles/BillApartmentScreenStyles';
-import {Formik, Field} from 'formik';
-import {HeaderIconButton} from '../../components/HeaderIconButton';
-import {AuthContext} from '../../contexts/AuthContext';
-import {HeaderIconsContainer} from '../../components/HeaderIconsContainer';
-import {ThemeContext} from '../../contexts/ThemeContext';
-import {AuthContainer} from '../../components/AuthContainer';
-import {Heading} from '../../components/Heading';
+  TouchableWithoutFeedback,
+  Pressable
+} from 'react-native';
+// import {
+//   FAB,
+//   Modal,
+//   Portal,
+//   Text as PapaerText,
+//   TextInput,
+//   Provider,
+// } from 'react-native-paper';
+import { styles } from './Styles/BillApartmentScreenStyles';
+import { Formik, Field } from 'formik';
+import { HeaderIconButton } from '../../components/HeaderIconButton';
+import { AuthContext } from '../../contexts/AuthContext';
+import { HeaderIconsContainer } from '../../components/HeaderIconsContainer';
+import { ThemeContext } from '../../contexts/ThemeContext';
+import { AuthContainer } from '../../components/AuthContainer';
+import { Heading } from '../../components/Heading';
 import SecureStorage from 'react-native-secure-storage';
-import {Input} from '../../components/Input';
-import {Error} from '../../components/Error';
-import {UserContext} from '../../contexts/UserContext';
-import {BASE_URL} from '../../config';
-import {Loading} from '../../components/Loading';
+import { Input } from '../../components/Input';
+import { Error } from '../../components/Error';
+import { UserContext } from '../../contexts/UserContext';
+import { BASE_URL } from '../../config';
+import { Loading } from '../../components/Loading';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Moment from 'moment';
-import {FilledButton} from '../../components/FilledButton';
+import { FilledButton } from '../../components/FilledButton';
 import * as yup from 'yup';
-import {EmergencyAlarmModal} from '../../components/EmergencyAlarmModal';
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import { EmergencyAlarmModal } from '../../components/EmergencyAlarmModal';
+import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import Picker from '../../components/popupView/picker';
 // import DatePicker from 'react-native-datepicker';
 import DatePicker from 'react-native-date-picker';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {Colors} from '../../themes/Colors';
-import {Images} from '../../themes/Images';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Colors } from '../../themes/Colors';
+import { Images } from '../../themes/Images';
 
-export function BillApartmentScreen({navigation}) {
-  const {logout} = React.useContext(AuthContext);
+export function BillApartmentScreen({ navigation }) {
+  const { logout } = React.useContext(AuthContext);
   const switchTheme = React.useContext(ThemeContext);
-  const {token} = React.useContext(UserContext);
+  const { token } = React.useContext(UserContext);
   const [data, setData] = React.useState();
   const [record, setRecored] = React.useState();
   const [appUser, setAppUser] = React.useState();
@@ -61,7 +64,8 @@ export function BillApartmentScreen({navigation}) {
   const [isLoadMore, setIsLoadMore] = React.useState(false);
   const [pageNumber, setPageNumber] = React.useState(1);
   const [refreshing, setRefreshing] = React.useState(false);
-  const [visible, setVisible] = React.useState(false);
+  const [isVisible, setIsVisible] = React.useState(false);
+
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const showPicker = () => setVisible(true);
@@ -219,7 +223,7 @@ export function BillApartmentScreen({navigation}) {
       // Footer View with Loader
       <View style={styles.footer}>
         {loadMore ? (
-          <ActivityIndicator color="#FFF" style={{margin: 15}} />
+          <ActivityIndicator color="#FFF" style={{ margin: 15 }} />
         ) : null}
       </View>
     );
@@ -255,10 +259,10 @@ export function BillApartmentScreen({navigation}) {
                   style={styles.buttonStyle}
                   activeOpacity={0.8}
                   onPress={() => {
-                    navigation.navigate('BillInfo', {data});
+                    navigation.navigate('BillInfo', { data });
                   }}>
                   <Text style={styles.buttonTextStyle}>
-                    <Icon name="pencil" style={{fontSize: 30}} />
+                    <Icon name="pencil" style={{ fontSize: 30 }} />
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -280,15 +284,15 @@ export function BillApartmentScreen({navigation}) {
                     <View style={[styles.topInfoWrap, styles.borderRight]}>
                       <Text style={styles.infoLbl}>Payments</Text>
                       <TouchableOpacity
-                        style={{color: '#EDB43C'}}
+                        style={{ color: '#EDB43C' }}
                         activeOpacity={0.8}
                         onPress={() => {
                           navigation.navigate('BillListingScreen');
                         }}>
-                        <Text style={{textAlign: 'center'}}>
+                        <Text style={{ textAlign: 'center' }}>
                           <Icon
                             name="list-circle-outline"
-                            style={{fontSize: 46, color: '#EDB43C'}}
+                            style={{ fontSize: 46, color: '#EDB43C' }}
                           />
                         </Text>
                       </TouchableOpacity>
@@ -539,13 +543,9 @@ export function BillApartmentScreen({navigation}) {
           <Loading loading={loading} />
         </SafeAreaView>
       </ScrollView>
-      <Provider>
-        <Portal>
-          <Modal
-            visible={visible}
-            onDismiss={hideModal}
-            contentContainerStyle={containerStyle}
-            style={styles.modal}>
+      <View style={styles.centeredView}>
+        <Modal transparent={true} visible={isVisible} animationType="fade">
+          <Pressable onPressOut={()=>setIsVisible(false)} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
             <Formik
               validationSchema={validationSchema}
               initialValues={{
@@ -556,6 +556,7 @@ export function BillApartmentScreen({navigation}) {
               }}
               onSubmit={values => {
                 sendIssue(values);
+                setIsVisible(false);
               }}>
               {({
                 handleChange,
@@ -565,84 +566,101 @@ export function BillApartmentScreen({navigation}) {
                 errors,
                 isValid,
               }) => (
-                <KeyboardAwareScrollView
-                  keyboardShouldPersistTaps="handled"
-                  showsVerticalScrollIndicator={false}>
-                  <Text style={styles.lableInput}>Add Bill Form</Text>
-                  <View style={styles.dropdownContainer}>
-                    <Picker
-                      style={{color: '#000'}}
-                      contentContainerStyle={{
-                        borderBottomWidth: 1,
-                        backgroundColor: 'red',
-                        borderBottomColor: '#000',
-                      }}
-                      selectedValue={values.bill_category}
-                      onValueChange={handleChange('bill_category')}
-                      placeholder={'Bill Category'}
-                      data={[
-                        {label: 'Home Insurance', value: 'Home Insurance'},
-                        {
-                          label: 'Electricity Provider',
-                          value: 'Electricity Provider',
-                        },
-                        {label: 'Gas Provider', value: 'Gas Provider'},
-                        {label: 'Water', value: 'Water'},
-                        {label: 'Telephone', value: 'Telephone'},
-                        {label: 'Broadband', value: 'Broadband'},
-                        {label: 'Council Tax', value: 'Council Tax'},
-                        {label: 'TV License', value: 'TV License'},
-                        {label: 'Car Expenses', value: 'Car Expenses'},
-                        {label: 'Service Charge', value: 'Service Charge'},
-                        {label: 'Ground Rent', value: 'Ground Rent'},
-                        {label: 'Parking Fees', value: 'Parking Fees'},
-                        {label: 'Gym', value: 'Gym'},
-                      ]}
-                    />
-                  </View>
-                  {errors.bill_category && (
-                    <Text style={styles.errorTextStyle}>
-                      {errors.bill_category}
-                    </Text>
-                  )}
-                  <View style={styles.inputContainer}>
-                    <Input
-                      name="title"
-                      placeholder="Title"
-                      style={styles.textInput}
-                      onChangeText={handleChange('title')}
-                      onBlur={handleBlur('title')}
-                      value={values.title}
-                      keyboardType="default"
-                    />
-                  </View>
-                  {errors.title && (
-                    <Text style={styles.errorTextStyle}>{errors.title}</Text>
-                  )}
-                  <View style={styles.inputContainer}>
-                    <View style={styles.inputContainer}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setIsDateModel(true);
-                        }}>
-                        <View
-                          style={[
-                            styles.inputContainer,
+                <TouchableWithoutFeedback>
+
+                <View style={{
+                  backgroundColor: '#FFF',
+                  paddingTop: 40,
+                  padding: 10,
+                  marginHorizontal: 15,
+                  borderRadius: 30,
+                  borderColor: '#FFF',
+                  borderWidth: 2.5,
+                  width: 300
+                }}>
+                    <KeyboardAwareScrollView
+                      keyboardShouldPersistTaps="handled"
+                      showsVerticalScrollIndicator={false}>
+                      <Text style={styles.lableInput}>Add Bill Form</Text>
+                      <View style={styles.dropdownContainer}>
+                        <Picker
+                          style={{ color: '#000' }}
+                          contentContainerStyle={{
+                            backgroundColor: '#FFF',
+                            paddingTop: 40,
+                            padding: 10,
+                            marginHorizontal: 15,
+                            borderRadius: 30,
+                            borderColor: '#FFF',
+                            borderWidth: 2.5,
+                            width: 300
+                          }}
+                          selectedValue={values.bill_category}
+                          onValueChange={handleChange('bill_category')}
+                          placeholder={'Bill Category'}
+                          data={[
+                            { label: 'Home Insurance', value: 'Home Insurance' },
                             {
-                              flexDirection: 'row',
-                              borderBottomWidth: 1,
-                              borderBottomColor: '#000',
-                              paddingVertical: 5,
+                              label: 'Electricity Provider',
+                              value: 'Electricity Provider',
                             },
-                          ]}>
-                          <Text>{Moment(date).format('MM/DD/YYYY')}</Text>
-                          <View style={{position: 'absolute', right: 10}}>
-                            <Icon name="calendar-outline" size={24} />
-                          </View>
+                            { label: 'Gas Provider', value: 'Gas Provider' },
+                            { label: 'Water', value: 'Water' },
+                            { label: 'Telephone', value: 'Telephone' },
+                            { label: 'Broadband', value: 'Broadband' },
+                            { label: 'Council Tax', value: 'Council Tax' },
+                            { label: 'TV License', value: 'TV License' },
+                            { label: 'Car Expenses', value: 'Car Expenses' },
+                            { label: 'Service Charge', value: 'Service Charge' },
+                            { label: 'Ground Rent', value: 'Ground Rent' },
+                            { label: 'Parking Fees', value: 'Parking Fees' },
+                            { label: 'Gym', value: 'Gym' },
+                          ]}
+                        />
+                      </View>
+                      {errors.bill_category && (
+                        <Text style={styles.errorTextStyle}>
+                          {errors.bill_category}
+                        </Text>
+                      )}
+                      <View style={styles.inputContainer}>
+                        <Input
+                          name="title"
+                          placeholder="Title"
+                          style={styles.textInput}
+                          onChangeText={handleChange('title')}
+                          onBlur={handleBlur('title')}
+                          value={values.title}
+                          keyboardType="default"
+                        />
+                      </View>
+                      {errors.title && (
+                        <Text style={styles.errorTextStyle}>{errors.title}</Text>
+                      )}
+                      <View style={styles.inputContainer}>
+                        <View style={styles.inputContainer}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setIsDateModel(true);
+                            }}>
+                            <View
+                              style={[
+                                styles.inputContainer,
+                                {
+                                  flexDirection: 'row',
+                                  borderBottomWidth: 1,
+                                  borderBottomColor: '#000',
+                                  paddingVertical: 5,
+                                },
+                              ]}>
+                              <Text>{Moment(date).format('MM/DD/YYYY')}</Text>
+                              <View style={{ position: 'absolute', right: 10 }}>
+                                <Icon name="calendar-outline" size={24} />
+                              </View>
+                            </View>
+                          </TouchableOpacity>
                         </View>
-                      </TouchableOpacity>
-                    </View>
-                    {/* <DatePicker
+                        {/* <DatePicker
                       style={styles.datePickerStyle}
                       date={date} // Initial date from state
                       mode="date" // The enum of date, datetime and time
@@ -680,40 +698,43 @@ export function BillApartmentScreen({navigation}) {
                         setDate(date);
                       }}
                     /> */}
-                  </View>
-                  {errors.payment_date && (
-                    <Text style={styles.errorTextStyle}>
-                      {errors.payment_date}
-                    </Text>
-                  )}
-                  <View style={styles.inputContainer}>
-                    <Input
-                      name="bill_amount"
-                      placeholder="Bill Amount"
-                      style={styles.textInput}
-                      onChangeText={handleChange('bill_amount')}
-                      onBlur={handleBlur('bill_amount')}
-                      value={values.bill_amount}
-                      keyboardType="default"
-                    />
-                  </View>
-                  {errors.bill_amount && (
-                    <Text style={styles.errorTextStyle}>
-                      {errors.bill_amount}
-                    </Text>
-                  )}
-                  <Error error={error} />
-                  <FilledButton
-                    style={styles.submitButton}
-                    title={'Add Bill'}
-                    onPress={handleSubmit}
-                  />
-                </KeyboardAwareScrollView>
+                      </View>
+                      {errors.payment_date && (
+                        <Text style={styles.errorTextStyle}>
+                          {errors.payment_date}
+                        </Text>
+                      )}
+                      <View style={styles.inputContainer}>
+                        <Input
+                          name="bill_amount"
+                          placeholder="Bill Amount"
+                          style={styles.textInput}
+                          onChangeText={handleChange('bill_amount')}
+                          onBlur={handleBlur('bill_amount')}
+                          value={values.bill_amount}
+                          keyboardType="default"
+                        />
+                      </View>
+                      {errors.bill_amount && (
+                        <Text style={styles.errorTextStyle}>
+                          {errors.bill_amount}
+                        </Text>
+                      )}
+                      <Error error={error} />
+                      <FilledButton
+                        style={styles.submitButton}
+                        title={'Add Bill'}
+                        onPress={handleSubmit}
+                      />
+                    </KeyboardAwareScrollView>
+                </View>
+                </TouchableWithoutFeedback>
+
               )}
             </Formik>
-          </Modal>
-        </Portal>
-      </Provider>
+          </Pressable>
+        </Modal>
+      </View>
 
       <Modal
         visible={isDateModel}
@@ -736,7 +757,7 @@ export function BillApartmentScreen({navigation}) {
             top: 0,
           }}>
           <TouchableOpacity
-            style={{height: '100%', width: '100%'}}
+            style={{ height: '100%', width: '100%' }}
             onPress={() => {
               setIsDateModel(false);
             }}>
@@ -771,12 +792,18 @@ export function BillApartmentScreen({navigation}) {
         </View>
       </Modal>
 
-      <FAB
+      {/* <FAB
         style={styles.fab}
         icon="plus"
         theme={{colors: {accent: 'white'}}}
         onPress={showModal}
-      />
+      /> */}
+      <TouchableOpacity
+        onPress={() => setIsVisible(true)}
+        style={styles.openButton}>
+        {/* <Text style={styles.textStyle}>Open</Text> */}
+        <Icon name={'add'} size={25} />
+      </TouchableOpacity>
     </AuthContainer>
   );
 }

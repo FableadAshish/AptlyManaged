@@ -255,11 +255,11 @@ export function NotificationScreen({navigation}) {
           <ImageBackground
             source={Images.Notifications}
             style={styles.headerBG}>
-            <Icon
+            {/* <Icon
               name="arrow-back"
               style={styles.backicon}
               onPress={() => navigation.goBack()}
-            />
+            /> */}
             <Heading style={styles.titleText}>Notifications</Heading>
           </ImageBackground>
           <View style={styles.container}>
@@ -292,27 +292,6 @@ export function NotificationScreen({navigation}) {
                   </>
                 ))
               : null}
-            {/* {data && (
-                        <View style={styles.listingWrap}>
-                            <FlatList
-                                horizontal={true}
-                                data={data}
-                                renderItem={services}
-                                keyExtractor={(item) => 'ses' + item.id}
-                                initialNumToRender={10}
-                                onEndReachedThreshold={0.1}
-                                onEndReached={() => {
-                                    if (isLoadMore) {
-                                        getMoreData();
-                                    }
-                                }}
-                                ListFooterComponent={renderFooter}
-                                refreshControl={
-                                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                                }
-                            />
-                        </View>
-                    )} */}
           </View>
           <EmergencyAlarmModal setLoading={setLoading} />
           <Loading loading={loading} />
