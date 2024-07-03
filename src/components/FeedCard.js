@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -8,17 +8,18 @@ import {
   TouchableOpacity,
   Pressable,
   Modal,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Moment from 'moment';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Colors} from '../themes/Colors';
+import { Colors } from '../themes/Colors';
 
 const FeedCard = props => {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
 
-  const renderPhoto = ({index, item}) => {
+  const renderPhoto = ({ index, item }) => {
     return index !== 0 ? (
-      <Image style={styles.image} source={{uri: item}} />
+      <Image style={styles.image} source={{ uri: item }} />
     ) : null;
   };
   const {
@@ -42,7 +43,7 @@ const FeedCard = props => {
       <View style={styles.item}>
         <View style={styles.leftView}>
           {userimage ? (
-            <Image style={styles.iconContainer} source={{uri: userimage}} />
+            <Image style={styles.iconContainer} source={{ uri: userimage }} />
           ) : (
             <Icon name="person" style={styles.iconSize} />
           )}
@@ -74,7 +75,7 @@ const FeedCard = props => {
           {images && images.length > 0 && (
             <>
               <Image
-                source={{uri: images[0]}}
+                source={{ uri: images[0] }}
                 style={styles.descriptionImage}
               />
               <FlatList
@@ -91,7 +92,7 @@ const FeedCard = props => {
                 name="heart"
                 style={[
                   styles.hearticonSize,
-                  {color: liked ? Colors.primarColor : '#999'},
+                  { color: liked ? Colors.primarColor : '#999' },
                 ]}
               />
               <Text style={styles.actionText}>{likesCount}</Text>
@@ -112,41 +113,46 @@ const FeedCard = props => {
       </View>
       <Modal animationType="fade" visible={isModalVisible} transparent={true}>
         <View style={styles.modalOverlay}>
-          <View
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Pressable
+            onPressOut={() => setIsModalVisible(false)}
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <View style={styles.modalContainer}>
-              <View style={styles.content}>
-                <View style={styles.titleContainer}>
-                  <Text style={styles.title}>Report Post</Text>
+              <TouchableWithoutFeedback>
+                <View>
+                  <View style={styles.content}>
+                    <View style={styles.titleContainer}>
+                      <Text style={styles.title}>Report Post</Text>
+                    </View>
+                    <View style={styles.guidelines}>
+                      <Text style={styles.guidelinesText}>
+                        This post will be reported. Please confirm
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      width: '100%',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      backgroundColor: 'white',
+                      height: 55,
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => setIsModalVisible(false)}
+                      style={styles.yesButton}>
+                      <Text style={{ color: Colors.primarColor }}>Yes</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => setIsModalVisible(false)}
+                      style={styles.noButton}>
+                      <Text style={{ color: Colors.primarColor }}>NO</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-                <View style={styles.guidelines}>
-                  <Text style={styles.guidelinesText}>
-                    This post will be reported. Please confirm
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  width: '100%',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  backgroundColor: 'white',
-                  height: 55,
-                }}>
-                <TouchableOpacity
-                  onPress={() => setIsModalVisible(false)}
-                  style={styles.yesButton}>
-                  <Text style={{color: Colors.primarColor}}>Yes</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setIsModalVisible(false)}
-                  style={styles.noButton}>
-                  <Text style={{color: Colors.primarColor}}>NO</Text>
-                </TouchableOpacity>
-              </View>
+              </TouchableWithoutFeedback>
             </View>
-          </View>
+          </Pressable>
         </View>
       </Modal>
     </>

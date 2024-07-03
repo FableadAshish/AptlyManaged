@@ -13,7 +13,6 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { fontSize, isIos, spacing } from '../../constants/appStyles';
 import Picker from '../../components/popupView/picker';
 import { AuthContainer } from '../../components/AuthContainer';
 import { FilledButton } from '../../components/FilledButton';

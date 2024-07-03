@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import {
-  Image,
   View,
-  FlatList,
-  TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
   // Picker,
@@ -12,18 +9,12 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { fontSize, isIos, spacing } from '../../constants/appStyles';
-import Picker from '../../components/popupView/picker';
 import { AuthContainer } from '../../components/AuthContainer';
 import { FilledButton } from '../../components/FilledButton';
 import { BASE_URL } from '../../config';
 import SecureStorage from 'react-native-secure-storage';
-import { Loading } from '../../components/Loading';
 import { UserContext } from '../../contexts/UserContext';
 import { useNavigation } from '@react-navigation/native';
-import PopView from '../../components/popupView';
-import { validURL } from '../../components/AddFeed';
 
 export const Label = (props) => (
   <Text style={styles.labelText}>{props.value}</Text>
@@ -189,6 +180,7 @@ class BillEditScreen extends Component {
 
   onSuccess = (response) => {
     this.setState({ loading: false });
+    console.log("Success",{response});
     const propsState = this.props.getState() || {};
     const { backScreen } = propsState;
     console.log({ response, props: this.props });

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,22 +8,23 @@ import {
   Text,
   Modal,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Pressable,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-crop-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {useNavigation} from '@react-navigation/native';
-import {Colors} from '../themes/Colors';
+import { useNavigation } from '@react-navigation/native';
+import { Colors } from '../themes/Colors';
 
 export const validURL = str => {
   var pattern = new RegExp(
     '^(https?:\\/\\/)?' + // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-      '(\\#[-a-z\\d_]*)?$',
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+    '(\\#[-a-z\\d_]*)?$',
     'i',
   ); // fragment locator
   return !!pattern.test(str);
@@ -127,12 +128,12 @@ const AddFeed = props => {
     setShowSubmit(false);
   };
 
-  const renderPhoto = ({item}) => {
+  const renderPhoto = ({ item }) => {
     var source = typeof item === 'object' ? item.path : item;
     console.log('source', source);
     return (
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={{uri: source}} />
+        <Image style={styles.image} source={{ uri: source }} />
         <Icon
           name="close-circle-sharp"
           onPress={() => {
@@ -161,7 +162,7 @@ const AddFeed = props => {
                 {props.currentUser && props.currentUser.image ? (
                   <Image
                     style={styles.iconContainer}
-                    source={{uri: props.currentUser.image}}
+                    source={{ uri: props.currentUser.image }}
                   />
                 ) : (
                   <Icon name="person" style={styles.iconSize} />
@@ -171,7 +172,7 @@ const AddFeed = props => {
             <TextInput
               multiline={true}
               placeholder="Post a message"
-              style={[styles.textInput, {height: Math.max(40, height)}]}
+              style={[styles.textInput, { height: Math.max(40, height) }]}
               paddingLeft={12}
               paddingRight={12}
               value={title}
@@ -212,7 +213,7 @@ const AddFeed = props => {
           <View style={styles.sendContainer}>
             <MaterialIcons
               name="groups"
-              style={{fontSize: 30, color: 'white', marginHorizontal: 10}}
+              style={{ fontSize: 30, color: 'white', marginHorizontal: 10 }}
               onPress={() => navigation.navigate('MyClubs')}
             />
             <FlatList
@@ -245,32 +246,34 @@ const AddFeed = props => {
       <Modal animationType="fade" visible={isModalVisible} transparent={true}>
         <View style={styles.modalOverlay}>
           <Pressable
-          onPressOut={()=>setIsModalVisible(!isModalVisible)}
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            onPressOut={() => setIsModalVisible(false)}
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <View style={styles.modalContainer}>
-              <View style={styles.content}>
-                <View style={styles.titleContainer}>
-                  <Text style={styles.title}>Community Guidelines</Text>
+              <TouchableWithoutFeedback >
+                <View style={styles.content}>
+                  <View style={styles.titleContainer}>
+                    <Text style={styles.title}>Community Guidelines</Text>
+                  </View>
+                  <View style={styles.guidelines}>
+                    <Text style={styles.guidelinesText}>
+                      Our Aptly message board needs to be a safe and comfortable
+                      place to post. Messages that threaten people or have the
+                      ability to intimidate, exclude or silence others are not
+                      permitted.
+                    </Text>
+                    <Text style={styles.guidelinesText}>
+                      Please be respectful with message content, discrimination of
+                      any kind will not be tolerated
+                    </Text>
+                    <Text style={styles.guidelinesText}>
+                      A message deemed inappropriate can be reported by app users
+                      through the report button. A message reported three times is
+                      automatically deleted. OK apologise for any inconvenience
+                      this may cause.
+                    </Text>
+                  </View>
                 </View>
-                <View style={styles.guidelines}>
-                  <Text style={styles.guidelinesText}>
-                    Our Aptly message board needs to be a safe and comfortable
-                    place to post. Messages that threaten people or have the
-                    ability to intimidate, exclude or silence others are not
-                    permitted.
-                  </Text>
-                  <Text style={styles.guidelinesText}>
-                    Please be respectful with message content, discrimination of
-                    any kind will not be tolerated
-                  </Text>
-                  <Text style={styles.guidelinesText}>
-                    A message deemed inappropriate can be reported by app users
-                    through the report button. A message reported three times is
-                    automatically deleted. OK apologise for any inconvenience
-                    this may cause.
-                  </Text>
-                </View>
-              </View>
+              </TouchableWithoutFeedback>
               <Pressable
                 onPress={() => setIsModalVisible(false)}
                 style={styles.cancelButton}>
@@ -379,7 +382,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderBottomRightRadius: 5,
     borderBottomLeftRadius: 5,
-    backgroundColor:'white'
+    backgroundColor: 'white'
   },
   modalContainer: {
     marginHorizontal: 10,

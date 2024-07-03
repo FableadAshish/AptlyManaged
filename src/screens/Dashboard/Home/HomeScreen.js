@@ -40,14 +40,15 @@ export function HomeScreen() {
     getHomeDetails();
   }, []);
 
-  // console.log('check live messagews', data)
   function getHomeDetails() {
+    
     setRefreshing(false);
     setLoading(true);
     // const getLiveMessages = setInterval(()=>{
       SecureStorage.getItem('user').then(user => {
         if (user) {
           const userDetails = JSON.parse(user);
+          console.log('check New', userDetails.details)
           setAppUser(userDetails.details);
           axios
             .post(
